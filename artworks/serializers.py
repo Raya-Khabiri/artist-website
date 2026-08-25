@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Artwork, Category, ArtworkImage
+from .models import Artwork, Category, ArtworkImage, Technique
 
 
 class ArtworkImageSerializer(serializers.ModelSerializer):
@@ -14,8 +14,19 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ["id", "name", "slug"]
 
 
+class TechniqueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Technique
+        fields = [
+            "id",
+            "name",
+            "slug",
+        ]
+
+
 class ArtworkSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
+    technique = TechniqueSerializer(read_only=True)
     images = ArtworkImageSerializer(many=True, read_only=True)
 
     class Meta:
