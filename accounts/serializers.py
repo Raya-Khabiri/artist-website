@@ -10,6 +10,10 @@ from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from django.db import transaction
+
+from .models import Conversation, Message
+
 User = get_user_model()
 
 
@@ -138,3 +142,166 @@ class LoginSerializer(serializers.Serializer):
             ),
             "refresh": str(refresh),
         }
+
+
+class UserSummarySerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+
+        fields = (
+            "id",
+            "full_name",
+            "is_staff",
+        )
+
+    def get_full_name(self, obj):
+        return obj.get_full_name() or "User"
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    sender = UserSummarySerializer(
+        read_only=True,
+    )
+
+    class Meta:
+        model = Message
+
+        fields = (
+            "id",
+            "sender",
+            "body",
+            "read_at",
+            "created_at",
+        )
+
+        read_only_fields = fields
+
+
+class ConversationSerializer(
+    serializers.ModelSerializer,
+):
+    customer = UserSummarySerializer(
+        read_only=True,
+    )
+
+    assigned_artist = UserSummarySerializer(
+        read_only=True,
+    )
+
+    messages = MessageSerializer(
+        many=True,
+        read_only=True,
+    )
+
+    class Meta:
+        model = Conversation
+
+        fields = (
+            "id",
+            "subject",
+            "status",
+            "customer",
+            "assigned_artist",
+            "messages",
+            "created_at",
+            "updated_at",
+        )
+
+        read_only_fields = fields
+
+
+class ConversationCreateSerializer(
+    serializers.Serializer,
+):
+    subject = serializers.CharField(
+        max_length=200,
+    )
+
+    message = serializers.CharField(
+        max_length=5000,
+        trim_whitespace=True,
+    )
+
+    def validate_subject(self, value):
+        subject = value.strip()
+
+        if not subject:
+            raise serializers.ValidationError("Subject cannot be empty.")
+
+        return subject
+
+    def validate_message(self, value):
+        message = value.strip()
+
+        if not message:
+            raise serializers.ValidationError("Message cannot be empty.")
+
+        return message
+
+    @transaction.atomic
+    def create(self, validated_data):
+        request = self.context["request"]
+
+        conversation = Conversation.objects.create(
+            customer=request.user,
+            subject=validated_data["subject"],
+        )
+
+        Message.objects.create(
+            conversation=conversation,
+            sender=request.user,
+            body=validated_data["message"],
+        )
+
+        return conversation
+
+
+class MessageCreateSerializer(
+    serializers.Serializer,
+):
+    body = serializers.CharField(
+        max_length=5000,
+        trim_whitespace=True,
+    )
+
+    def validate_body(self, value):
+        body = value.strip()
+
+        if not body:
+            raise serializers.ValidationError("Message cannot be empty.")
+
+        return body
+
+    def validate(self, attrs):
+        conversation = self.context["conversation"]
+
+        if conversation.status == Conversation.Status.CLOSED:
+            raise serializers.ValidationError(
+                {
+                    "conversation": ("This conversation is closed."),
+                }
+            )
+
+        return attrs
+
+    @transaction.atomic
+    def create(self, validated_data):
+        request = self.context["request"]
+
+        conversation = self.context["conversation"]
+
+        message = Message.objects.create(
+            conversation=conversation,
+            sender=request.user,
+            body=validated_data["body"],
+        )
+
+        conversation.save(
+            update_fields=[
+                "updated_at",
+            ],
+        )
+
+        return message
