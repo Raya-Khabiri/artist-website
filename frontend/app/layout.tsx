@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+// import { Geist, Geist_Mono } from "next/font/google";
 
 import SitePreloader from "@/components/layout/SitePreloader";
 
 import "./globals.css";
+import AuthProvider from "@/components/auth/AuthProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
@@ -87,19 +88,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`
-        ${geistSans.variable}
-        ${geistMono.variable}
-        h-full
-        antialiased
-      `}
-    >
+    // <html
+    //   lang="en"
+    //   className={`
+    //     ${geistSans.variable}
+    //     ${geistMono.variable}
+    //     h-full
+    //     antialiased
+    //   `}
+    // >
+    <html lang="en" className="h-full antialiased">
       <body className="flex min-h-full flex-col">
-        <SitePreloader />
-
-        {children}
+        <AuthProvider>
+          <SitePreloader />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
