@@ -51,7 +51,7 @@ export async function loginUser(
 export async function registerUser(
   userData: RegisterData,
 ): Promise<RegisterResponse> {
-  const response = await fetch(`${API_URL}/api/accounts/register/`, {
+  const response = await fetch("/api/auth/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
