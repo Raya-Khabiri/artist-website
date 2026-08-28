@@ -1,5 +1,6 @@
 import type {
   Conversation,
+  ConversationMessage,
   CreateConversationData,
 } from "@/types/conversation";
 
@@ -58,4 +59,43 @@ export async function getConversations(): Promise<Conversation[]> {
   }
 
   return data.results ?? [];
+}
+
+export async function getConversation(
+  id: number | string,
+): Promise<Conversation> {
+  const response = await fetch(`/api/conversations/${id}`, {
+    method: "GET",
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error(await getErrorMessage(response));
+  }
+
+  return response.json();
+}
+
+export async function sendMessage(
+  conversationId: number | string,
+  body: string,
+): Promise<ConversationMessage> {
+  const response = await fetch(
+    `/api/conversations/${conversationId}/messages`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        body,
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(await getErrorMessage(response));
+  }
+
+  return response.json();
 }

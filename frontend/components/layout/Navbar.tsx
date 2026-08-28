@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
+import { useAuth } from "@/components/auth/AuthProvider";
 
 const navItems = [
   {
@@ -23,8 +26,12 @@ const navItems = [
 ];
 
 export default function Navbar() {
+  const router = useRouter();
+  const { user, isLoading, logout } = useAuth();
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,12 +43,24 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener(
-        "scroll",
-        handleScroll,
-      );
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  async function handleLogout() {
+    setIsSigningOut(true);
+
+    try {
+      await logout();
+      setIsMenuOpen(false);
+      router.push("/");
+      router.refresh();
+    } catch (error) {
+      console.error("Unable to sign out:", error);
+    } finally {
+      setIsSigningOut(false);
+    }
+  }
 
   return (
     <header className="fixed left-0 top-0 z-50 w-full">
@@ -63,11 +82,7 @@ export default function Navbar() {
           md:px-10
           lg:px-16
 
-          ${
-            isScrolled
-              ? "shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
-              : ""
-          }
+          ${isScrolled ? "shadow-[0_8px_30px_rgba(0,0,0,0.08)]" : ""}
         `}
       >
         <Link
@@ -86,9 +101,10 @@ export default function Navbar() {
           EAMORA
         </Link>
 
+        {/* Desktop navigation */}
         <nav
           aria-label="Primary navigation"
-          className="hidden items-center gap-9 md:flex"
+          className="hidden items-center gap-7 md:flex"
         >
           {navItems.map((item) => (
             <Link
@@ -106,14 +122,62 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
+
+          {!isLoading &&
+            (user ? (
+              <>
+                <Link
+                  href="/account/messages"
+                  className="
+                    text-sm
+                    tracking-[0.12em]
+                    text-black/60
+                    transition-colors
+                    duration-300
+                    hover:text-black
+                  "
+                >
+                  Messages
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  disabled={isSigningOut}
+                  className="
+                    text-sm
+                    tracking-[0.12em]
+                    text-[#9b1c1c]
+                    transition-opacity
+                    hover:opacity-60
+                    disabled:cursor-not-allowed
+                    disabled:opacity-40
+                  "
+                >
+                  {isSigningOut ? "Signing out..." : "Sign out"}
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                className="
+                  text-sm
+                  tracking-[0.12em]
+                  text-[#9b1c1c]
+                  transition-opacity
+                  hover:opacity-60
+                "
+              >
+                Sign in
+              </Link>
+            ))}
         </nav>
 
+        {/* Mobile menu button */}
         <button
           type="button"
           aria-label={
-            isMenuOpen
-              ? "Close navigation menu"
-              : "Open navigation menu"
+            isMenuOpen ? "Close navigation menu" : "Open navigation menu"
           }
           aria-expanded={isMenuOpen}
           aria-controls="mobile-navigation"
@@ -140,11 +204,7 @@ export default function Navbar() {
               transition-transform
               duration-300
 
-              ${
-                isMenuOpen
-                  ? "translate-y-0 rotate-45"
-                  : "-translate-y-1.5"
-              }
+              ${isMenuOpen ? "translate-y-0 rotate-45" : "-translate-y-1.5"}
             `}
           />
 
@@ -157,11 +217,7 @@ export default function Navbar() {
               transition-opacity
               duration-300
 
-              ${
-                isMenuOpen
-                  ? "opacity-0"
-                  : "opacity-100"
-              }
+              ${isMenuOpen ? "opacity-0" : "opacity-100"}
             `}
           />
 
@@ -174,16 +230,13 @@ export default function Navbar() {
               transition-transform
               duration-300
 
-              ${
-                isMenuOpen
-                  ? "translate-y-0 -rotate-45"
-                  : "translate-y-1.5"
-              }
+              ${isMenuOpen ? "translate-y-0 -rotate-45" : "translate-y-1.5"}
             `}
           />
         </button>
       </div>
 
+      {/* Mobile navigation */}
       <div
         id="mobile-navigation"
         className={`
@@ -196,17 +249,10 @@ export default function Navbar() {
           duration-500
           md:hidden
 
-          ${
-            isMenuOpen
-              ? "max-h-96 border-b"
-              : "max-h-0"
-          }
+          ${isMenuOpen ? "max-h-[520px] border-b" : "max-h-0"}
         `}
       >
-        <nav
-          aria-label="Mobile navigation"
-          className="flex flex-col px-6 py-6"
-        >
+        <nav aria-label="Mobile navigation" className="flex flex-col px-6 py-6">
           {navItems.map((item) => (
             <Link
               key={item.label}
@@ -226,6 +272,62 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
+
+          {!isLoading &&
+            (user ? (
+              <>
+                <Link
+                  href="/account/messages"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="
+                    border-b
+                    border-black/10
+                    py-4
+                    text-sm
+                    tracking-[0.14em]
+                    text-black/70
+                    transition-colors
+                    hover:text-black
+                  "
+                >
+                  Messages
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  disabled={isSigningOut}
+                  className="
+                    py-4
+                    text-left
+                    text-sm
+                    tracking-[0.14em]
+                    text-[#9b1c1c]
+                    transition-opacity
+                    hover:opacity-60
+                    disabled:cursor-not-allowed
+                    disabled:opacity-40
+                  "
+                >
+                  {isSigningOut ? "Signing out..." : "Sign out"}
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setIsMenuOpen(false)}
+                className="
+                  py-4
+                  text-sm
+                  tracking-[0.14em]
+                  text-[#9b1c1c]
+                  transition-opacity
+                  hover:opacity-60
+                "
+              >
+                Sign in
+              </Link>
+            ))}
         </nav>
       </div>
     </header>
