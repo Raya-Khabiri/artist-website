@@ -3,15 +3,12 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import (
-    LoginSerializer,
-    RegisterSerializer,
-)
 from rest_framework import generics, status
 from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated,
 )
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -23,6 +20,9 @@ from .serializers import (
     RegisterSerializer,
     MessageCreateSerializer,
     MessageSerializer,
+    LoginSerializer,
+    RegisterSerializer,
+    UserSummarySerializer,
 )
 
 from django.shortcuts import get_object_or_404
@@ -158,3 +158,11 @@ class MessageCreateAPIView(
             output_serializer.data,
             status=status.HTTP_201_CREATED,
         )
+
+
+class CurrentUserAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = UserSummarySerializer(request.user)
+        return Response(serializer.data)

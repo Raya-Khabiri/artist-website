@@ -226,3 +226,17 @@ class ConversationAPITests(APITestCase):
         )
 
         self.assertEqual(response.status_code, 400)
+
+    def test_authenticated_user_can_view_current_profile(self):
+        response = self.client.get("/api/accounts/me/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["id"], self.user.id)
+        self.assertFalse(response.data["is_staff"])
+
+    def test_unauthenticated_user_cannot_view_current_profile(self):
+        self.client.force_authenticate(user=None)
+
+        response = self.client.get("/api/accounts/me/")
+
+        self.assertEqual(response.status_code, 401)

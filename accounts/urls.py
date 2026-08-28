@@ -1,11 +1,12 @@
 from django.urls import path
-
+from rest_framework_simplejwt.views import TokenRefreshView
 from .views import (
     ConversationDetailAPIView,
     ConversationListCreateAPIView,
     LoginAPIView,
     RegisterAPIView,
     MessageCreateAPIView,
+    CurrentUserAPIView,
 )
 
 app_name = "accounts"
@@ -36,5 +37,15 @@ urlpatterns = [
         "conversations/<int:conversation_id>/messages/",
         MessageCreateAPIView.as_view(),
         name="message-create",
+    ),
+    path(
+        "me/",
+        CurrentUserAPIView.as_view(),
+        name="current-user",
+    ),
+    path(
+        "token/refresh/",
+        TokenRefreshView.as_view(),
+        name="token-refresh",
     ),
 ]
