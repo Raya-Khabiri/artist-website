@@ -4,6 +4,7 @@ import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import Container from "@/components/ui/Container";
 import { getSiteSettings } from "@/lib/api";
+import ContactMessageForm from "@/components/contact/ContactMessageForm";
 
 export const metadata: Metadata = {
   title: "Contact | EAMORA",
@@ -70,6 +71,26 @@ export default async function ContactPage() {
                   Facebook
                 </a>
               )}
+            </div>
+          </div>
+          <div className="mt-24 grid gap-12 border-t border-black/10 pt-16 lg:mt-36 lg:grid-cols-12 lg:pt-24">
+            <div className="lg:col-span-5">
+              <p className="text-xs uppercase tracking-[0.35em] text-[#9b1c1c]">
+                Private conversation
+              </p>
+
+              <h2 className="mt-6 font-serif text-4xl font-light md:text-5xl">
+                Write to the artist
+              </h2>
+
+              <p className="mt-7 max-w-md leading-8 text-black/60">
+                Your enquiry will be saved privately in your EAMORA account, so
+                you can return and continue the conversation at any time.
+              </p>
+            </div>
+
+            <div className="lg:col-span-6 lg:col-start-7">
+              <ContactMessageForm />
             </div>
           </div>
         </Container>
