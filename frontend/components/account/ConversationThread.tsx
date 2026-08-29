@@ -136,7 +136,36 @@ export default function ConversationThread({
           {conversation.status}
         </span>
       </div>
+      {user.is_staff && conversation.customer.email && (
+        <section className="mt-8 border border-black/15 bg-white/25 px-6 py-5">
+          <p className="text-[10px] uppercase tracking-[0.25em] text-[#9b1c1c]">
+            Customer details
+          </p>
 
+          <div className="mt-4 flex flex-wrap gap-x-10 gap-y-3 text-sm text-black/65">
+            <p>
+              <span className="text-black/40">Name: </span>
+
+              {conversation.customer.full_name ||
+                `${conversation.customer.first_name ?? ""} ${
+                  conversation.customer.last_name ?? ""
+                }`.trim() ||
+                "Customer"}
+            </p>
+
+            <p>
+              <span className="text-black/40">Email: </span>
+
+              <a
+                href={`mailto:${conversation.customer.email}`}
+                className="transition hover:text-[#9b1c1c]"
+              >
+                {conversation.customer.email}
+              </a>
+            </p>
+          </div>
+        </section>
+      )}
       <div className="space-y-6 py-10">
         {conversation.messages.map((message) => {
           const isOwnMessage = message.sender.id === user.id;

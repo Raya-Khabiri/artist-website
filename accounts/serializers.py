@@ -149,7 +149,6 @@ class UserSummarySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-
         fields = (
             "id",
             "full_name",
@@ -158,6 +157,27 @@ class UserSummarySerializer(serializers.ModelSerializer):
 
     def get_full_name(self, obj):
         return obj.get_full_name() or "User"
+
+
+class CustomerDetailsSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+
+        fields = (
+            "id",
+            "first_name",
+            "last_name",
+            "full_name",
+            "email",
+            "is_staff",
+        )
+
+        read_only_fields = fields
+
+    def get_full_name(self, obj):
+        return obj.get_full_name() or obj.email or "User"
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -179,12 +199,8 @@ class MessageSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 
-class ConversationSerializer(
-    serializers.ModelSerializer,
-):
-    customer = UserSummarySerializer(
-        read_only=True,
-    )
+class ConversationSerializer(serializers.ModelSerializer):
+    customer = serializers.SerializerMethodField()
 
     assigned_artist = UserSummarySerializer(
         read_only=True,
@@ -210,6 +226,20 @@ class ConversationSerializer(
         )
 
         read_only_fields = fields
+
+    def get_customer(self, obj):
+        request = self.context.get("request")
+
+        if request and request.user.is_authenticated and request.user.is_staff:
+            return CustomerDetailsSerializer(
+                obj.customer,
+                context=self.context,
+            ).data
+
+        return UserSummarySerializer(
+            obj.customer,
+            context=self.context,
+        ).data
 
 
 class ConversationCreateSerializer(
