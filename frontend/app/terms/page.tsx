@@ -26,17 +26,14 @@ export default function TermsPage() {
               Terms & Conditions
             </h1>
 
-            <div className="mt-14 space-y-10 text-base leading-8 text-black/65">
+            <div className="mt-14 space-y-7 text-justify text-[17px] leading-[1.55] text-black/65">
               <section>
-                <h2 className="font-serif text-2xl text-black">
-                  Website use
-                </h2>
+                <h2 className="font-serif text-2xl text-black">Website use</h2>
 
-                <p className="mt-4">
-                  This website presents artworks and information
-                  relating to EAMORA. Content may not be copied,
-                  reproduced or used commercially without written
-                  permission.
+                <p className="mt-2">
+                  This website presents artworks and information relating to
+                  EAMORA. Content may not be copied, reproduced or used
+                  commercially without written permission.
                 </p>
               </section>
 
@@ -45,34 +42,29 @@ export default function TermsPage() {
                   Artwork information
                 </h2>
 
-                <p className="mt-4">
-                  Every effort is made to present artwork details,
-                  dimensions, colours and availability accurately.
-                  Colours may vary between screens and devices.
+                <p className="mt-2">
+                  Every effort is made to present artwork details, dimensions,
+                  colours and availability accurately. Colours may vary between
+                  screens and devices.
                 </p>
               </section>
 
               <section>
-                <h2 className="font-serif text-2xl text-black">
-                  Purchases
-                </h2>
+                <h2 className="font-serif text-2xl text-black">Purchases</h2>
 
-                <p className="mt-4">
-                  Final prices, payment terms, shipping costs and
-                  delivery arrangements will be confirmed before
-                  an order is accepted.
+                <p className="mt-2">
+                  Final prices, payment terms, shipping costs and delivery
+                  arrangements will be confirmed before an order is accepted.
                 </p>
               </section>
 
               <section>
-                <h2 className="font-serif text-2xl text-black">
-                  Copyright
-                </h2>
+                <h2 className="font-serif text-2xl text-black">Copyright</h2>
 
-                <p className="mt-4">
-                  Purchasing an original artwork or print does not
-                  transfer copyright or reproduction rights unless
-                  agreed separately in writing.
+                <p className="mt-2">
+                  Purchasing an original artwork or print does not transfer
+                  copyright or reproduction rights unless agreed separately in
+                  writing.
                 </p>
               </section>
 
@@ -81,10 +73,10 @@ export default function TermsPage() {
                   Important notice
                 </h2>
 
-                <p className="mt-4">
-                  These terms are temporary launch copy and must be
-                  reviewed for the artist’s legal jurisdiction before
-                  online payments are enabled.
+                <p className="mt-2">
+                  These terms are temporary launch copy and must be reviewed for
+                  the artist’s legal jurisdiction before online payments are
+                  enabled.
                 </p>
               </section>
             </div>
