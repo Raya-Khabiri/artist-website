@@ -26,29 +26,26 @@ export default function ShippingReturnsPage() {
               Shipping & Returns
             </h1>
 
-            <div className="mt-14 space-y-10 text-base leading-8 text-black/65">
+            <div className="mt-14 space-y-7 text-justify text-[17px] leading-[1.55] text-black/65">
               <section>
                 <h2 className="font-serif text-2xl text-black">
                   Original artworks
                 </h2>
 
-                <p className="mt-4">
-                  Original artworks are carefully packaged for
-                  transport. Shipping arrangements, cost, estimated
-                  delivery time and insurance will be confirmed
-                  before the order is accepted.
+                <p className="mt-2">
+                  Original artworks are carefully packaged for transport.
+                  Shipping arrangements, cost, estimated delivery time and
+                  insurance will be confirmed before the order is accepted.
                 </p>
               </section>
 
               <section>
-                <h2 className="font-serif text-2xl text-black">
-                  Prints
-                </h2>
+                <h2 className="font-serif text-2xl text-black">Prints</h2>
 
-                <p className="mt-4">
-                  Available print sizes, production times, packaging
-                  and delivery estimates will be shown before
-                  checkout when print ordering is enabled.
+                <p className="mt-2">
+                  Available print sizes, production times, packaging and
+                  delivery estimates will be shown before checkout when print
+                  ordering is enabled.
                 </p>
               </section>
 
@@ -57,10 +54,9 @@ export default function ShippingReturnsPage() {
                   International delivery
                 </h2>
 
-                <p className="mt-4">
-                  International customers may be responsible for
-                  import duties, taxes or customs charges imposed by
-                  the destination country.
+                <p className="mt-2">
+                  International customers may be responsible for import duties,
+                  taxes or customs charges imposed by the destination country.
                 </p>
               </section>
 
@@ -69,23 +65,21 @@ export default function ShippingReturnsPage() {
                   Damaged deliveries
                 </h2>
 
-                <p className="mt-4">
-                  Any visible damage should be photographed
-                  immediately, including the artwork and packaging,
-                  and reported as soon as possible after delivery.
+                <p className="mt-2">
+                  Any visible damage should be photographed immediately,
+                  including the artwork and packaging, and reported as soon as
+                  possible after delivery.
                 </p>
               </section>
 
               <section>
-                <h2 className="font-serif text-2xl text-black">
-                  Returns
-                </h2>
+                <h2 className="font-serif text-2xl text-black">Returns</h2>
 
-                <p className="mt-4">
+                <p className="mt-2">
                   Return eligibility and costs depend on the product,
-                  destination and applicable consumer law.
-                  Custom-made or commissioned works may not be
-                  returnable unless damaged or defective.
+                  destination and applicable consumer law. Custom-made or
+                  commissioned works may not be returnable unless damaged or
+                  defective.
                 </p>
               </section>
 
@@ -94,10 +88,10 @@ export default function ShippingReturnsPage() {
                   Important notice
                 </h2>
 
-                <p className="mt-4">
-                  This page contains temporary launch information.
-                  Final shipping and return terms must be confirmed
-                  before online payments are enabled.
+                <p className="mt-2">
+                  This page contains temporary launch information. Final
+                  shipping and return terms must be confirmed before online
+                  payments are enabled.
                 </p>
               </section>
             </div>

@@ -26,16 +26,16 @@ export default function PrivacyPage() {
               Privacy Policy
             </h1>
 
-            <div className="mt-14 space-y-10 text-base leading-8 text-black/65">
+            <div className="mt-14 space-y-7 text-justify text-[17px] leading-[1.55] text-black/65">
               <section>
                 <h2 className="font-serif text-2xl text-black">
                   Information we collect
                 </h2>
 
-                <p className="mt-4">
-                  EAMORA may collect information that you voluntarily
-                  provide, such as your name, email address, telephone
-                  number, delivery address and enquiry details.
+                <p className="mt-2">
+                  EAMORA may collect information that you voluntarily provide,
+                  such as your name, email address, telephone number, delivery
+                  address and enquiry details.
                 </p>
               </section>
 
@@ -44,34 +44,30 @@ export default function PrivacyPage() {
                   How information is used
                 </h2>
 
-                <p className="mt-4">
-                  Personal information may be used to respond to
-                  enquiries, process purchases, arrange delivery,
-                  provide customer support and meet legal obligations.
+                <p className="mt-2">
+                  Personal information may be used to respond to enquiries,
+                  process purchases, arrange delivery, provide customer support
+                  and meet legal obligations.
                 </p>
               </section>
 
               <section>
-                <h2 className="font-serif text-2xl text-black">
-                  Payments
-                </h2>
+                <h2 className="font-serif text-2xl text-black">Payments</h2>
 
-                <p className="mt-4">
-                  When online payments are enabled, payment information
-                  will be processed securely by the selected payment
-                  provider. EAMORA will not store complete card details.
+                <p className="mt-2">
+                  When online payments are enabled, payment information will be
+                  processed securely by the selected payment provider. EAMORA
+                  will not store complete card details.
                 </p>
               </section>
 
               <section>
-                <h2 className="font-serif text-2xl text-black">
-                  Data sharing
-                </h2>
+                <h2 className="font-serif text-2xl text-black">Data sharing</h2>
 
-                <p className="mt-4">
-                  Information may be shared only with service providers
-                  required to process payments, deliver orders, operate
-                  the website or comply with legal requirements.
+                <p className="mt-2">
+                  Information may be shared only with service providers required
+                  to process payments, deliver orders, operate the website or
+                  comply with legal requirements.
                 </p>
               </section>
 
@@ -80,22 +76,20 @@ export default function PrivacyPage() {
                   Data retention and rights
                 </h2>
 
-                <p className="mt-4">
-                  Information will be retained only for as long as
-                  reasonably necessary. Depending on your location, you
-                  may have rights to access, correct or request deletion
-                  of your personal information.
+                <p className="mt-2">
+                  Information will be retained only for as long as reasonably
+                  necessary. Depending on your location, you may have rights to
+                  access, correct or request deletion of your personal
+                  information.
                 </p>
               </section>
 
               <section>
-                <h2 className="font-serif text-2xl text-black">
-                  Contact
-                </h2>
+                <h2 className="font-serif text-2xl text-black">Contact</h2>
 
-                <p className="mt-4">
-                  Privacy-related questions can be submitted through
-                  the Contact page.
+                <p className="mt-2">
+                  Privacy-related questions can be submitted through the Contact
+                  page.
                 </p>
               </section>
 
@@ -104,10 +98,10 @@ export default function PrivacyPage() {
                   Important notice
                 </h2>
 
-                <p className="mt-4">
-                  This is temporary launch copy and must be reviewed for
-                  the artist’s legal jurisdiction before customer data
-                  is collected or online payments are enabled.
+                <p className="mt-2">
+                  This is temporary launch copy and must be reviewed for the
+                  artist’s legal jurisdiction before customer data is collected
+                  or online payments are enabled.
                 </p>
               </section>
             </div>
