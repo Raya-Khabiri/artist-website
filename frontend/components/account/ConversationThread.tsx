@@ -130,6 +130,26 @@ export default function ConversationThread({
           <h1 className="mt-4 font-serif text-4xl font-light md:text-5xl">
             {conversation.subject}
           </h1>
+
+          {user.is_staff && conversation.customer.email && (
+            <div className="mt-6 border-l-2 border-[#9b1c1c] pl-4">
+              <p className="text-[10px] uppercase tracking-[0.25em] text-black/40">
+                Customer
+              </p>
+
+              <p className="mt-2 font-serif text-xl font-light text-black/75">
+                {conversation.customer.first_name}{" "}
+                {conversation.customer.last_name}
+              </p>
+
+              <a
+                href={`mailto:${conversation.customer.email}`}
+                className="mt-1 inline-block text-sm text-black/55 underline underline-offset-4 transition hover:text-[#9b1c1c]"
+              >
+                {conversation.customer.email}
+              </a>
+            </div>
+          )}
         </div>
 
         <span className="text-xs uppercase tracking-[0.25em] text-[#9b1c1c]">
