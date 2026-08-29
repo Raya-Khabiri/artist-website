@@ -1,7 +1,10 @@
 import type { AuthUser } from "@/types/auth";
 
+export type ConversationCustomer = {
+  id: number;
+  full_name: string;
+  is_staff: boolean;
 
-export type ConversationCustomer = AuthUser & {
   first_name?: string;
   last_name?: string;
   email?: string;
@@ -9,7 +12,11 @@ export type ConversationCustomer = AuthUser & {
 
 export type ConversationMessage = {
   id: number;
-  sender: AuthUser;
+  sender: {
+    id: number;
+    full_name: string;
+    is_staff: boolean;
+  };
   body: string;
   read_at: string | null;
   created_at: string;

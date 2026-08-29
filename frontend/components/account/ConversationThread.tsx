@@ -15,9 +15,11 @@ export default function ConversationThread({
   const { user, isLoading: isAuthLoading } = useAuth();
 
   const [conversation, setConversation] = useState<Conversation | null>(null);
+
   const [reply, setReply] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+
   const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
@@ -80,6 +82,7 @@ export default function ConversationThread({
         ...conversation,
         messages: [...conversation.messages, newMessage],
       });
+
       setReply("");
     } catch (error) {
       setError(
@@ -103,7 +106,17 @@ export default function ConversationThread({
 
         <Link
           href="/login"
-          className="mt-6 inline-block border border-[#171717] px-6 py-3 text-xs uppercase tracking-[0.25em]"
+          className="
+            mt-6
+            inline-block
+            border
+            border-[#171717]
+            px-6
+            py-3
+            text-xs
+            uppercase
+            tracking-[0.25em]
+          "
         >
           Sign in
         </Link>
@@ -121,30 +134,90 @@ export default function ConversationThread({
 
   return (
     <div>
-      <div className="flex flex-wrap items-start justify-between gap-6 border-b border-black/15 pb-8">
+      <div
+        className="
+          flex
+          flex-wrap
+          items-start
+          justify-between
+          gap-6
+          border-b
+          border-black/15
+          pb-8
+        "
+      >
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-black/40">
+          <p
+            className="
+              text-xs
+              uppercase
+              tracking-[0.25em]
+              text-black/40
+            "
+          >
             Conversation #{conversation.id}
           </p>
 
-          <h1 className="mt-4 font-serif text-4xl font-light md:text-5xl">
+          <h1
+            className="
+              mt-4
+              font-serif
+              text-4xl
+              font-light
+              md:text-5xl
+            "
+          >
             {conversation.subject}
           </h1>
 
           {user.is_staff && conversation.customer.email && (
-            <div className="mt-6 border-l-2 border-[#9b1c1c] pl-4">
-              <p className="text-[10px] uppercase tracking-[0.25em] text-black/40">
+            <div
+              className="
+                  mt-6
+                  border-l-2
+                  border-[#9b1c1c]
+                  pl-4
+                "
+            >
+              <p
+                className="
+                    text-[10px]
+                    uppercase
+                    tracking-[0.25em]
+                    text-black/40
+                  "
+              >
                 Customer
               </p>
 
-              <p className="mt-2 font-serif text-xl font-light text-black/75">
-                {conversation.customer.first_name}{" "}
-                {conversation.customer.last_name}
+              <p
+                className="
+                    mt-2
+                    font-serif
+                    text-xl
+                    font-light
+                    text-black/75
+                  "
+              >
+                {conversation.customer.full_name ||
+                  `${conversation.customer.first_name ?? ""} ${
+                    conversation.customer.last_name ?? ""
+                  }`.trim() ||
+                  "Customer"}
               </p>
 
               <a
                 href={`mailto:${conversation.customer.email}`}
-                className="mt-1 inline-block text-sm text-black/55 underline underline-offset-4 transition hover:text-[#9b1c1c]"
+                className="
+                    mt-1
+                    inline-block
+                    text-sm
+                    text-black/55
+                    underline
+                    underline-offset-4
+                    transition
+                    hover:text-[#9b1c1c]
+                  "
               >
                 {conversation.customer.email}
               </a>
@@ -152,7 +225,14 @@ export default function ConversationThread({
           )}
         </div>
 
-        <span className="text-xs uppercase tracking-[0.25em] text-[#9b1c1c]">
+        <span
+          className="
+            text-xs
+            uppercase
+            tracking-[0.25em]
+            text-[#9b1c1c]
+          "
+        >
           {conversation.status}
         </span>
       </div>
@@ -164,13 +244,30 @@ export default function ConversationThread({
           return (
             <article
               key={message.id}
-              className={`max-w-2xl border px-6 py-5 ${
-                isOwnMessage
-                  ? "ml-auto border-black/15 bg-white/35"
-                  : "mr-auto border-[#9b1c1c]/25 bg-[#9b1c1c]/[0.04]"
-              }`}
+              className={`
+                  max-w-2xl
+                  border
+                  px-6
+                  py-5
+                  ${
+                    isOwnMessage
+                      ? "ml-auto border-black/15 bg-white/35"
+                      : "mr-auto border-[#9b1c1c]/25 bg-[#9b1c1c]/[0.04]"
+                  }
+                `}
             >
-              <div className="flex flex-wrap justify-between gap-4 text-[10px] uppercase tracking-[0.2em] text-black/40">
+              <div
+                className="
+                    flex
+                    flex-wrap
+                    justify-between
+                    gap-4
+                    text-[10px]
+                    uppercase
+                    tracking-[0.2em]
+                    text-black/40
+                  "
+              >
                 <span>
                   {isOwnMessage
                     ? "You"
@@ -184,7 +281,14 @@ export default function ConversationThread({
                 </time>
               </div>
 
-              <p className="mt-4 whitespace-pre-wrap leading-8 text-black/75">
+              <p
+                className="
+                    mt-4
+                    whitespace-pre-wrap
+                    leading-8
+                    text-black/75
+                  "
+              >
                 {message.body}
               </p>
             </article>
@@ -193,10 +297,22 @@ export default function ConversationThread({
       </div>
 
       {conversation.status === "open" ? (
-        <form onSubmit={handleReply} className="border-t border-black/15 pt-8">
+        <form
+          onSubmit={handleReply}
+          className="
+            border-t
+            border-black/15
+            pt-8
+          "
+        >
           <label
             htmlFor="reply"
-            className="text-xs uppercase tracking-[0.25em] text-black/50"
+            className="
+              text-xs
+              uppercase
+              tracking-[0.25em]
+              text-black/50
+            "
           >
             Your reply
           </label>
@@ -207,11 +323,30 @@ export default function ConversationThread({
             rows={5}
             value={reply}
             onChange={(event) => setReply(event.target.value)}
-            className="mt-4 w-full resize-y border border-black/15 bg-transparent p-5 leading-7 outline-none transition focus:border-[#9b1c1c]"
+            className="
+              mt-4
+              w-full
+              resize-y
+              border
+              border-black/15
+              bg-transparent
+              p-5
+              leading-7
+              outline-none
+              transition
+              focus:border-[#9b1c1c]
+            "
           />
 
           {error && (
-            <p role="alert" className="mt-4 text-sm text-[#9b1c1c]">
+            <p
+              role="alert"
+              className="
+                mt-4
+                text-sm
+                text-[#9b1c1c]
+              "
+            >
               {error}
             </p>
           )}
@@ -219,13 +354,34 @@ export default function ConversationThread({
           <button
             type="submit"
             disabled={isSending}
-            className="mt-6 border border-[#171717] px-7 py-4 text-xs uppercase tracking-[0.25em] transition hover:bg-[#171717] hover:text-[#f4f1eb] disabled:opacity-50"
+            className="
+              mt-6
+              border
+              border-[#171717]
+              px-7
+              py-4
+              text-xs
+              uppercase
+              tracking-[0.25em]
+              transition
+              hover:bg-[#171717]
+              hover:text-[#f4f1eb]
+              disabled:opacity-50
+            "
           >
             {isSending ? "Sending..." : "Send reply"}
           </button>
         </form>
       ) : (
-        <p className="border-t border-black/15 pt-8 text-sm text-black/50">
+        <p
+          className="
+            border-t
+            border-black/15
+            pt-8
+            text-sm
+            text-black/50
+          "
+        >
           This conversation is closed.
         </p>
       )}
