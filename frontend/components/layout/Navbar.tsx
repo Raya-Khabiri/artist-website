@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { useAuth } from "@/components/auth/AuthProvider";
+import Image from "next/image";
 
 const navItems = [
   {
@@ -88,17 +89,28 @@ export default function Navbar() {
         <Link
           href="/"
           onClick={() => setIsMenuOpen(false)}
+          aria-label="EAMORA home"
           className="
-            text-xl
-            font-medium
-            tracking-[0.3em]
-            text-black
-            transition-colors
+            relative
+            block
+            h-[72px]
+            w-60
+            shrink-0
+            transition-opacity
             duration-300
-            hover:text-[#9b1c1c]
+            hover:opacity-65
+
+            sm:w-64
           "
         >
-          EAMORA
+          <Image
+            src="/images/logo/eamora-logo-v2.png"
+            alt="EAMORA"
+            fill
+            priority
+            sizes="256px"
+            className="object-contain object-left"
+          />
         </Link>
 
         {/* Desktop navigation */}
