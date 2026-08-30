@@ -29,6 +29,11 @@ export type SiteSettings = {
   artist_statement_title: string;
   artist_statement: string;
   artist_image: string | null;
+  artist_name: string;
+  artist_origin: string;
+  artist_location: string;
+  artist_profession: string;
+  artist_biography: string;
 
   contact_email: string;
   phone: string;

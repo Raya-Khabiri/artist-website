@@ -77,6 +77,40 @@ class SiteSettings(models.Model):
         null=True,
     )
 
+    # About the artist
+    artist_name = models.CharField(
+        max_length=120,
+        blank=True,
+        default="",
+    )
+
+    artist_origin = models.CharField(
+        max_length=200,
+        blank=True,
+        default="",
+        help_text=("Example: Born in Shiraz, Iran"),
+    )
+
+    artist_location = models.CharField(
+        max_length=200,
+        blank=True,
+        default="",
+        help_text=("Example: Based in London"),
+    )
+
+    artist_profession = models.CharField(
+        max_length=250,
+        blank=True,
+        default="",
+        help_text=("Example: Architect — PhD in Urbanism"),
+    )
+
+    artist_biography = models.TextField(
+        blank=True,
+        default="",
+        help_text=("Separate paragraphs with an empty line."),
+    )
+
     # Contact information
     contact_email = models.EmailField(
         blank=True,
