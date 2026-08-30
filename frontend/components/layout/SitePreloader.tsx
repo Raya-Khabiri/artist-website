@@ -1,8 +1,13 @@
 "use client";
 
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function SitePreloader() {
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+
   const [isVisible, setIsVisible] = useState(true);
 
   const [isLeaving, setIsLeaving] = useState(false);
@@ -10,17 +15,24 @@ export default function SitePreloader() {
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
 
+    setIsVisible(true);
+    setIsLeaving(false);
+
     document.body.style.overflow = "hidden";
+
+    const leaveAfter = isHomePage ? 3400 : 950;
+
+    const removeAfter = isHomePage ? 4100 : 1350;
 
     const leaveTimer = window.setTimeout(() => {
       setIsLeaving(true);
-    }, 3000);
+    }, leaveAfter);
 
     const removeTimer = window.setTimeout(() => {
       setIsVisible(false);
 
       document.body.style.overflow = previousOverflow;
-    }, 3800);
+    }, removeAfter);
 
     return () => {
       window.clearTimeout(leaveTimer);
@@ -28,99 +40,139 @@ export default function SitePreloader() {
 
       document.body.style.overflow = previousOverflow;
     };
-  }, []);
+  }, [pathname, isHomePage]);
 
   if (!isVisible) {
     return null;
   }
 
+  const logoAnimation = isHomePage
+    ? "eamora_mist_logo 2.3s cubic-bezier(0.22,1,0.36,1) 0.15s forwards"
+    : "eamora_mist_logo 0.75s ease-out forwards";
+
   return (
     <div
-      aria-hidden="true"
+      role="status"
+      aria-label="Loading EAMORA"
       className={`
         fixed
         inset-0
         z-[9999]
         flex
-        bg-[#10100f]
-        text-[#f4f1eb]
+        items-center
+        justify-center
+        overflow-hidden
+        bg-[#faf9f6]
         transition-all
-        duration-700
         ease-[cubic-bezier(0.76,0,0.24,1)]
 
-        ${
-          isLeaving
-            ? "-translate-y-full opacity-0"
-            : "translate-y-0 opacity-100"
-        }
+        ${isHomePage ? "duration-700" : "duration-300"}
+
+        ${isLeaving ? "scale-[1.015] opacity-0" : "scale-100 opacity-100"}
       `}
     >
-      <div className="flex w-full flex-col justify-center">
-        <div className="px-6 md:px-10 lg:px-16">
-          <div className="flex items-end justify-between gap-8">
-            <p className="text-[10px] uppercase tracking-[0.4em] text-white/40">
-              Art · Memory · Time
-            </p>
+      <div
+        className="
+          w-full
+          px-6
+          sm:px-10
+          md:px-16
+        "
+      >
+        <div
+          className={`
+            mx-auto
+            w-full
+            transition-[max-width]
+            duration-500
 
-            <p className="text-[10px] uppercase tracking-[0.3em] text-white/40">
-              Loading
-            </p>
-          </div>
-
-          <div className="mt-8 overflow-hidden">
-            <div className="animate-[eamora-title_1.8s_cubic-bezier(0.76,0,0.24,1)_both]">
-              <p
-                className="
-                  flex
-                  items-center
-                  justify-between
-                  font-serif
-                  text-[16vw]
-                  font-light
-                  leading-[0.8]
-                  tracking-[0.05em]
-
-                  md:text-[14vw]
-                  lg:text-[12vw]
-                "
-              >
-                {"EAMORA".split("").map((letter, index) => (
-                  <span
-                    key={`${letter}-${index}`}
-                    className={
-                      index === 0 ? "text-[#a62a27]" : "text-[#f4f1eb]"
-                    }
-                  >
-                    {letter}
-                  </span>
-                ))}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="relative mt-12 h-px w-full overflow-hidden bg-white/15">
+            ${isHomePage ? "max-w-[1000px]" : "max-w-[360px]"}
+          `}
+        >
           <div
             className="
-              absolute
-              inset-y-0
-              left-0
-              w-full
-              origin-left
-              animate-[eamora-line_2.7s_cubic-bezier(0.65,0,0.35,1)_both]
-              bg-[#a62a27]
+              eamora-preloader-motion
+              opacity-0
             "
-          />
-        </div>
+            style={{
+              animation: logoAnimation,
+            }}
+          >
+            <div
+              className="
+                eamora-preloader-motion
+                relative
+              "
+              style={
+                isHomePage
+                  ? {
+                      animation:
+                        "eamora_logo_breathe 2.2s ease-in-out 2.35s infinite alternate",
+                    }
+                  : undefined
+              }
+            >
+              <Image
+                src="/images/logo/eamora-preloader.png"
+                alt="EAMORA"
+                width={2048}
+                height={332}
+                priority
+                sizes={
+                  isHomePage
+                    ? "(max-width: 640px) 90vw, (max-width: 1024px) 84vw, 1000px"
+                    : "(max-width: 640px) 70vw, 360px"
+                }
+                className="
+                  block
+                  h-auto
+                  w-full
+                  select-none
+                "
+              />
+            </div>
+          </div>
 
-        <div className="mt-5 flex justify-between gap-8 px-6 md:px-10 lg:px-16">
-          <p className="text-[9px] uppercase tracking-[0.35em] text-white/35">
-            Eternal A Moment
-          </p>
+          {isHomePage && (
+            <div
+              className="
+                eamora-preloader-motion
+                mt-8
+                flex
+                items-center
+                justify-center
+                gap-3
+                opacity-0
+                text-[9px]
+                uppercase
+                tracking-[0.34em]
+                text-black/40
 
-          <p className="text-right text-[9px] uppercase tracking-[0.35em] text-white/35">
-            Once Remembered Again
-          </p>
+                sm:text-[10px]
+              "
+              style={{
+                animation: "eamora_loading_text 1s ease 1.65s forwards",
+              }}
+            >
+              <span>EAMORA</span>
+
+              <span
+                aria-hidden="true"
+                className="
+                  eamora-preloader-motion
+                  h-1
+                  w-1
+                  rounded-full
+                  bg-[#9b1c1c]
+                "
+                style={{
+                  animation: "eamora_loading_pulse 1.1s ease-in-out infinite",
+                }}
+              />
+
+              <span>Loading</span>
+            </div>
+          )}
         </div>
       </div>
     </div>

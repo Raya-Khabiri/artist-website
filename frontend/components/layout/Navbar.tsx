@@ -17,10 +17,6 @@ const navItems = [
     href: "/about",
   },
   {
-    label: "Statement",
-    href: "/#statement",
-  },
-  {
     label: "Contact",
     href: "/contact",
   },
