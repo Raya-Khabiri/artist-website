@@ -33,12 +33,15 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             },
         ),
         (
-            "Artist statement",
+            "About the artist",
             {
                 "fields": (
-                    "artist_statement_title",
-                    "artist_statement",
+                    "artist_name",
+                    "artist_origin",
+                    "artist_location",
+                    "artist_profession",
                     "artist_image",
+                    "artist_biography",
                 ),
             },
         ),

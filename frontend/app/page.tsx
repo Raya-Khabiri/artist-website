@@ -1,4 +1,3 @@
-import ArtistStatement from "@/components/home/ArtistStatement";
 import FeaturedWorks from "@/components/home/FeaturedWorks";
 import Hero from "@/components/home/Hero";
 import ProcessVideo from "@/components/home/ProcessVideo";
@@ -29,7 +28,6 @@ export default async function HomePage() {
         )}
 
         <FeaturedWorks />
-        <ArtistStatement />
       </main>
 
       <Footer />
