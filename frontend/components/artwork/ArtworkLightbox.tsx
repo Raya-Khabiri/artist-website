@@ -12,11 +12,8 @@ type ArtworkLightboxProps = {
   images: LightboxImage[];
 };
 
-export default function ArtworkLightbox({
-  images,
-}: ArtworkLightboxProps) {
-  const [activeIndex, setActiveIndex] =
-    useState<number | null>(null);
+export default function ArtworkLightbox({ images }: ArtworkLightboxProps) {
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const isOpen = activeIndex !== null;
 
@@ -25,51 +22,30 @@ export default function ArtworkLightbox({
       return;
     }
 
-    const previousOverflow =
-      document.body.style.overflow;
+    const previousOverflow = document.body.style.overflow;
 
     document.body.style.overflow = "hidden";
 
-    function handleKeyDown(
-      event: KeyboardEvent,
-    ) {
+    function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setActiveIndex(null);
       }
 
-      if (
-        event.key === "ArrowRight" &&
-        activeIndex !== null
-      ) {
-        setActiveIndex(
-          (activeIndex + 1) % images.length,
-        );
+      if (event.key === "ArrowRight" && activeIndex !== null) {
+        setActiveIndex((activeIndex + 1) % images.length);
       }
 
-      if (
-        event.key === "ArrowLeft" &&
-        activeIndex !== null
-      ) {
-        setActiveIndex(
-          (activeIndex - 1 + images.length) %
-            images.length,
-        );
+      if (event.key === "ArrowLeft" && activeIndex !== null) {
+        setActiveIndex((activeIndex - 1 + images.length) % images.length);
       }
     }
 
-    window.addEventListener(
-      "keydown",
-      handleKeyDown,
-    );
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.body.style.overflow =
-        previousOverflow;
+      document.body.style.overflow = previousOverflow;
 
-      window.removeEventListener(
-        "keydown",
-        handleKeyDown,
-      );
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [activeIndex, images.length, isOpen]);
 
@@ -87,13 +63,19 @@ export default function ArtworkLightbox({
             group
             relative
             block
-            aspect-[4/5]
+            h-[55svh]
+            min-h-[360px]
+            max-h-[560px]
             w-full
             cursor-zoom-in
             overflow-hidden
             bg-black/5
 
-            md:aspect-[5/6]
+            sm:h-[60svh]
+
+            lg:h-[calc(100svh-16rem)]
+            lg:min-h-[420px]
+            lg:max-h-[620px]
           "
           aria-label="Open artwork in full screen"
         >
@@ -122,9 +104,7 @@ export default function ArtworkLightbox({
               <button
                 key={`${image.src}-${index}`}
                 type="button"
-                onClick={() =>
-                  setActiveIndex(index + 1)
-                }
+                onClick={() => setActiveIndex(index + 1)}
                 className="relative aspect-square cursor-zoom-in overflow-hidden bg-black/5"
                 aria-label={`Open image ${index + 2} in full screen`}
               >
@@ -173,8 +153,7 @@ export default function ArtworkLightbox({
                 type="button"
                 onClick={() =>
                   setActiveIndex(
-                    (activeIndex - 1 + images.length) %
-                      images.length,
+                    (activeIndex - 1 + images.length) % images.length,
                   )
                 }
                 className="absolute left-5 top-1/2 z-20 -translate-y-1/2 border border-white/20 bg-black/30 px-4 py-5 text-xl backdrop-blur transition hover:border-white/60"
@@ -186,10 +165,7 @@ export default function ArtworkLightbox({
               <button
                 type="button"
                 onClick={() =>
-                  setActiveIndex(
-                    (activeIndex + 1) %
-                      images.length,
-                  )
+                  setActiveIndex((activeIndex + 1) % images.length)
                 }
                 className="absolute right-5 top-1/2 z-20 -translate-y-1/2 border border-white/20 bg-black/30 px-4 py-5 text-xl backdrop-blur transition hover:border-white/60"
                 aria-label="Next image"

@@ -101,9 +101,7 @@ export async function getArtworkBySlug(
     const response = await fetch(
       `${API_URL}/api/artworks/artworks/${slug}/`,
       {
-        next: {
-          revalidate: 60,
-        },
+        cache: "no-store",
       },
     );
 

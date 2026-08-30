@@ -89,29 +89,14 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
 
   const mainImage = getMediaUrl(artwork.main_image);
 
-  const lightboxImages = [
-    ...(mainImage
-      ? [
-          {
-            src: mainImage,
-            alt: artwork.main_image_alt || artwork.title,
-          },
-        ]
-      : []),
-
-    ...artwork.images.flatMap((item) => {
-      const image = getMediaUrl(item.image);
-
-      return image
-        ? [
-            {
-              src: image,
-              alt: item.alt_text || artwork.title,
-            },
-          ]
-        : [];
-    }),
-  ];
+  const lightboxImages = mainImage
+    ? [
+        {
+          src: mainImage,
+          alt: artwork.main_image_alt || artwork.title,
+        },
+      ]
+    : [];
 
   const originalAvailable =
     artwork.original_available &&
@@ -171,7 +156,14 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
             </Link>
 
             <div className="mt-10 grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
-              <div className="lg:col-span-8">
+              <div
+                className="
+                  mx-auto
+                  w-full
+                  max-w-[720px]
+                  lg:col-span-7
+                "
+              >
                 {lightboxImages.length > 0 ? (
                   <ArtworkLightbox images={lightboxImages} />
                 ) : (
@@ -181,69 +173,101 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
                 )}
               </div>
 
-              <aside className="lg:col-span-4 lg:pt-8">
-                <p className="text-xs uppercase tracking-[0.3em] text-black/45">
-                  {artwork.category?.name || "Artwork"}
-                </p>
-
-                <h1 className="mt-5 text-4xl font-light leading-tight tracking-tight md:text-5xl">
+              <aside className="lg:col-span-5 lg:pt-8">
+                {/* 1. Artwork title */}
+                <h1
+                  className="
+                    font-serif
+                    text-4xl
+                    font-light
+                    leading-tight
+                    tracking-tight
+                    md:text-5xl
+                  "
+                >
                   {artwork.title}
                 </h1>
 
-                <p className="mt-5 text-xs uppercase tracking-[0.2em] text-[#9b1c1c]">
-                  {artwork.sale_status.replaceAll("_", " ")}
-                </p>
+                <dl
+                  className="
+                    mt-10
+                    divide-y
+                    divide-black/15
+                    border-y
+                    border-black/15
+                  "
+                >
+                  {/* 2. Dimensions */}
+                  <div className="flex justify-between gap-6 py-5">
+                    <dt className="text-sm text-black/45">Dimensions</dt>
 
-                <div className="mt-10 border-t border-black/15">
-                  <dl className="divide-y divide-black/15">
-                    {artwork.year && (
-                      <div className="flex justify-between gap-6 py-5">
-                        <dt className="text-sm text-black/45">Year</dt>
+                    <dd className="text-right text-sm text-black/75">
+                      {artwork.size ||
+                        (artwork.width_mm && artwork.height_mm
+                          ? `${artwork.width_mm} × ${artwork.height_mm} mm`
+                          : "Not specified")}
+                    </dd>
+                  </div>
 
-                        <dd className="text-sm">{artwork.year}</dd>
-                      </div>
-                    )}
+                  {/* 3. Technique */}
+                  <div className="flex justify-between gap-6 py-5">
+                    <dt className="text-sm text-black/45">Technique</dt>
 
-                    {artwork.medium && (
-                      <div className="flex justify-between gap-6 py-5">
-                        <dt className="text-sm text-black/45">Medium</dt>
+                    <dd className="text-right text-sm text-black/75">
+                      {artwork.technique?.name || "Not specified"}
+                    </dd>
+                  </div>
 
-                        <dd className="text-right text-sm">{artwork.medium}</dd>
-                      </div>
-                    )}
+                  {/* 4. Price */}
+                  <div className="flex justify-between gap-6 py-5">
+                    <dt className="text-sm text-black/45">Price</dt>
 
-                    {artwork.size && (
-                      <div className="flex justify-between gap-6 py-5">
-                        <dt className="text-sm text-black/45">Dimensions</dt>
+                    <dd
+                      className="
+                        text-right
+                        font-serif
+                        text-xl
+                        font-light
+                        text-black/80
+                      "
+                    >
+                      {artwork.show_price && artwork.original_price
+                        ? formatPrice(artwork.original_price, artwork.currency)
+                        : "Price on request"}
+                    </dd>
+                  </div>
+                </dl>
 
-                        <dd className="text-right text-sm">{artwork.size}</dd>
-                      </div>
-                    )}
-                  </dl>
-                </div>
-
-                {artwork.description && (
-                  <p className="mt-10 whitespace-pre-line text-base leading-8 text-black/65">
-                    {artwork.description}
-                  </p>
-                )}
-
-                {artwork.show_price && artwork.original_price && (
-                  <p className="mt-8 font-serif text-2xl font-light">
-                    {formatPrice(artwork.original_price, artwork.currency)}
-                  </p>
-                )}
-
-                {artwork.print_available && artwork.print_price && (
-                  <p className="mt-3 text-sm text-black/60">
-                    Prints from{" "}
-                    {formatPrice(artwork.print_price, artwork.currency)}
+                {/* 5. Short description */}
+                {artwork.short_description && (
+                  <p
+                    className="
+                      mt-8
+                      whitespace-pre-line
+                      text-justify
+                      text-base
+                      leading-7
+                      text-black/65
+                    "
+                  >
+                    {artwork.short_description}
                   </p>
                 )}
 
                 <Link
                   href={`/contact?artwork=${encodeURIComponent(artwork.title)}`}
-                  className="mt-10 inline-flex items-center gap-3 border-b border-black pb-2 text-xs uppercase tracking-[0.2em]"
+                  className="
+                    mt-10
+                    inline-flex
+                    items-center
+                    gap-3
+                    border-b
+                    border-black
+                    pb-2
+                    text-xs
+                    uppercase
+                    tracking-[0.2em]
+                  "
                 >
                   {originalAvailable
                     ? "Inquire about this work"
