@@ -168,12 +168,12 @@ export default async function Hero() {
           items-start
           px-6
           pb-[46vh]
-          pt-16
+          pt-28
 
           sm:px-10
-          sm:pt-20
+          sm:pt-28
 
-          md:px-14
+          md:px-32
 
           lg:items-center
           lg:px-0
