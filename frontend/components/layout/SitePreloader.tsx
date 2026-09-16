@@ -15,9 +15,6 @@ export default function SitePreloader() {
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
 
-    setIsVisible(true);
-    setIsLeaving(false);
-
     document.body.style.overflow = "hidden";
 
     const leaveAfter = isHomePage ? 3400 : 950;
@@ -40,7 +37,7 @@ export default function SitePreloader() {
 
       document.body.style.overflow = previousOverflow;
     };
-  }, [pathname, isHomePage]);
+  }, [isHomePage]);
 
   if (!isVisible) {
     return null;
