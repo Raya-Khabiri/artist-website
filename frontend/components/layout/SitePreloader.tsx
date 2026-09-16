@@ -13,13 +13,16 @@ export default function SitePreloader() {
   const [isLeaving, setIsLeaving] = useState(false);
 
   useEffect(() => {
+    if (!isHomePage) {
+      return;
+    }
+
     const previousOverflow = document.body.style.overflow;
 
     document.body.style.overflow = "hidden";
 
-    const leaveAfter = isHomePage ? 3400 : 950;
-
-    const removeAfter = isHomePage ? 4100 : 1350;
+    const leaveAfter = 3400;
+    const removeAfter = 4100;
 
     const leaveTimer = window.setTimeout(() => {
       setIsLeaving(true);
@@ -38,6 +41,10 @@ export default function SitePreloader() {
       document.body.style.overflow = previousOverflow;
     };
   }, [isHomePage]);
+
+  if (!isHomePage) {
+    return null;
+  }
 
   if (!isVisible) {
     return null;
