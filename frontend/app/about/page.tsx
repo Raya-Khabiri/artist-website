@@ -33,117 +33,115 @@ export default async function AboutPage() {
         className="
           min-h-screen
           bg-[#f4f1eb]
-          pb-28
-          pt-36
+          pb-24
+          pt-32
           text-[#171717]
-          md:pb-40
-          md:pt-44
+
+          md:pb-32
+          md:pt-40
         "
       >
         <Container>
-          <p
-            className="
-              text-[10px]
-              uppercase
-              tracking-[0.35em]
-              text-[#9b1c1c]
-            "
-          >
-            The artist
-          </p>
+          {/* Small page label */}
+          <div className="border-b border-black/10 pb-7">
+            <p
+              className="
+                text-[10px]
+                uppercase
+                tracking-[0.35em]
+                text-[#9b1c1c]
+              "
+            >
+              The artist
+            </p>
+          </div>
 
+          {/* Artist profile */}
           <div
             className="
-              mt-10
+              mx-auto
+              mt-12
               grid
+              max-w-[1050px]
               gap-12
-              lg:grid-cols-12
+
+              md:mt-16
+
+              lg:grid-cols-[280px_minmax(0,620px)]
               lg:items-start
-              lg:gap-16
-              xl:gap-24
+              lg:justify-between
+              lg:gap-20
             "
           >
-            <div className="lg:col-span-5">
-              <div className="lg:sticky lg:top-32">
-                {artistImage ? (
-                  <div
-                    className="
-                      relative
-                      aspect-square
-                      w-full
-                      overflow-hidden
-                      bg-black/5
-                    "
-                  >
-                    <Image
-                      src={artistImage}
-                      alt={
-                        settings?.artist_name
-                          ? `Portrait of ${settings.artist_name}`
-                          : "EAMORA artist"
-                      }
-                      fill
-                      priority
-                      sizes="
-                        (max-width: 1024px) 100vw,
-                        42vw
-                      "
-                      className="
-                        object-cover
-                        grayscale
-                      "
-                    />
-                  </div>
-                ) : (
-                  <div
-                    className="
-                      flex
-                      aspect-square
-                      items-center
-                      justify-center
-                      border
-                      border-black/10
-                      bg-black/[0.025]
-                      text-xs
-                      uppercase
-                      tracking-[0.25em]
-                      text-black/35
-                    "
-                  >
-                    Artist portrait
-                  </div>
-                )}
-
-                <p
+            {/* Portrait */}
+            <div className="w-full max-w-[280px]">
+              {artistImage ? (
+                <div
                   className="
-                    mt-4
+                    relative
+                    aspect-square
+                    w-full
+                    overflow-hidden
+                    bg-black/5
+                  "
+                >
+                  <Image
+                    src={artistImage}
+                    alt={
+                      settings?.artist_name
+                        ? `Portrait of ${settings.artist_name}`
+                        : "EAMORA artist"
+                    }
+                    fill
+                    priority
+                    sizes="280px"
+                    className="object-cover"
+                  />
+                </div>
+              ) : (
+                <div
+                  className="
+                    flex
+                    aspect-square
+                    items-center
+                    justify-center
+                    border
+                    border-black/10
+                    bg-black/[0.025]
                     text-[10px]
                     uppercase
                     tracking-[0.25em]
                     text-black/35
                   "
                 >
-                  Portrait of the artist
-                </p>
-              </div>
-            </div>
+                  Artist portrait
+                </div>
+              )}
 
-            <div className="lg:col-span-7">
-              <header
+              <p
                 className="
-                  border-b
-                  border-black/15
-                  pb-10
+                  mt-4
+                  text-[9px]
+                  uppercase
+                  tracking-[0.25em]
+                  text-black/35
                 "
               >
+                Portrait of the artist
+              </p>
+            </div>
+
+            {/* Biography */}
+            <article>
+              <header className="border-b border-black/10 pb-8">
                 <h1
                   className="
                     font-serif
-                    text-5xl
+                    text-3xl
                     font-light
-                    leading-none
-                    md:text-6xl
-                    xl:text-7xl
+                    leading-tight
+
+                    sm:text-4xl
                   "
                 >
                   {settings?.artist_name || "EAMORA"}
@@ -151,12 +149,13 @@ export default async function AboutPage() {
 
                 <div
                   className="
-                    mt-8
+                    mt-6
                     space-y-1
-                    text-base
-                    leading-7
+                    text-[15px]
+                    leading-6
                     text-black/65
-                    md:text-lg
+
+                    sm:text-base
                   "
                 >
                   {settings?.artist_origin && <p>{settings.artist_origin}</p>}
@@ -173,14 +172,14 @@ export default async function AboutPage() {
 
               <div
                 className="
-                  mt-10
+                  mt-8
                   space-y-6
-                  font-sans
-                  text-[17px]
+                  text-base
                   font-light
-                  leading-[1.55]
+                  leading-[1.65]
                   text-black/70
-                  md:text-lg
+
+                  md:text-[17px]
                 "
               >
                 {biographyParagraphs.map((paragraph, index) => (
@@ -192,7 +191,7 @@ export default async function AboutPage() {
                   </p>
                 ))}
               </div>
-            </div>
+            </article>
           </div>
         </Container>
       </main>
