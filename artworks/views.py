@@ -5,9 +5,11 @@ from django.db.models import (
     Q,
 )
 from rest_framework import viewsets
+from rest_framework.permissions import IsAdminUser
 
 from .models import Artwork, Category, Technique
 from .serializers import (
+    ArtworkManagementSerializer,
     ArtworkSerializer,
     CategorySerializer,
     TechniqueSerializer,
@@ -86,6 +88,24 @@ class ArtworkViewSet(viewsets.ReadOnlyModelViewSet):
             )
 
         return queryset
+
+
+class ArtworkManagementViewSet(viewsets.ModelViewSet):
+    serializer_class = ArtworkManagementSerializer
+    permission_classes = (IsAdminUser,)
+
+    def get_queryset(self):
+        return (
+            Artwork.objects.select_related(
+                "category",
+                "technique",
+            )
+            .prefetch_related("images")
+            .order_by(
+                "display_order",
+                "-created_at",
+            )
+        )
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):

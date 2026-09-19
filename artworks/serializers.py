@@ -32,3 +32,18 @@ class ArtworkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Artwork
         fields = "__all__"
+
+
+class ArtworkManagementSerializer(serializers.ModelSerializer):
+    images = ArtworkImageSerializer(
+        many=True,
+        read_only=True,
+    )
+
+    class Meta:
+        model = Artwork
+        fields = "__all__"
+        read_only_fields = (
+            "created_at",
+            "updated_at",
+        )
