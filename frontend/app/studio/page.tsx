@@ -128,7 +128,9 @@ export default function StudioPage() {
           "
         >
           {dashboardItems.map((item, index) => {
-            const isAvailable = item.href === "/account/messages";
+            const isAvailable =
+              item.href === "/account/messages" ||
+              item.href === "/studio/artworks";
 
             const content = (
               <>
