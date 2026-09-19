@@ -6,6 +6,7 @@ from .views import (
     ArtworkViewSet,
     CategoryViewSet,
     TechniqueViewSet,
+    ArtworkImageManagementViewSet,
 )
 
 router = DefaultRouter()
@@ -14,6 +15,12 @@ router.register(
     "manage/artworks",
     ArtworkManagementViewSet,
     basename="artwork-management",
+)
+
+router.register(
+    "manage/images",
+    ArtworkImageManagementViewSet,
+    basename="artwork-image-management",
 )
 
 router.register(

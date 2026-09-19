@@ -1,5 +1,7 @@
 import type {
   StudioArtwork,
+  StudioArtworkImage,
+  StudioArtworkImageListResponse,
   StudioArtworkListResponse,
 } from "@/types/studio";
 
@@ -117,6 +119,91 @@ export async function deleteStudioArtwork(
 ): Promise<void> {
   const response = await fetch(
     `/api/studio/artworks/${id}`,
+    {
+      method: "DELETE",
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(response),
+    );
+  }
+}
+
+export async function getStudioArtworkImages(
+  artworkId: number,
+): Promise<StudioArtworkImage[]> {
+  const response = await fetch(
+    `/api/studio/artwork-images?artwork=${artworkId}`,
+    {
+      method: "GET",
+      cache: "no-store",
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(response),
+    );
+  }
+
+  const data: StudioArtworkImageListResponse =
+    await response.json();
+
+  if (Array.isArray(data)) {
+    return data;
+  }
+
+  return data.results ?? [];
+}
+
+export async function createStudioArtworkImage(
+  formData: FormData,
+): Promise<StudioArtworkImage> {
+  const response = await fetch(
+    "/api/studio/artwork-images",
+    {
+      method: "POST",
+      body: formData,
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(response),
+    );
+  }
+
+  return response.json();
+}
+
+export async function updateStudioArtworkImage(
+  id: number,
+  formData: FormData,
+): Promise<StudioArtworkImage> {
+  const response = await fetch(
+    `/api/studio/artwork-images/${id}`,
+    {
+      method: "PATCH",
+      body: formData,
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(response),
+    );
+  }
+
+  return response.json();
+}
+
+export async function deleteStudioArtworkImage(
+  id: number,
+): Promise<void> {
+  const response = await fetch(
+    `/api/studio/artwork-images/${id}`,
     {
       method: "DELETE",
     },

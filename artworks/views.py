@@ -7,12 +7,23 @@ from django.db.models import (
 from rest_framework import viewsets
 from rest_framework.permissions import IsAdminUser
 
-from .models import Artwork, Category, Technique
+from .models import (
+    Artwork,
+    ArtworkImage,
+    Category,
+    Technique,
+)
 from .serializers import (
     ArtworkManagementSerializer,
     ArtworkSerializer,
     CategorySerializer,
     TechniqueSerializer,
+    ArtworkImageManagementSerializer,
+)
+
+from rest_framework.parsers import (
+    FormParser,
+    MultiPartParser,
 )
 
 
@@ -118,3 +129,26 @@ class TechniqueViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Technique.objects.all()
     serializer_class = TechniqueSerializer
     lookup_field = "slug"
+
+
+class ArtworkImageManagementViewSet(
+    viewsets.ModelViewSet,
+):
+    serializer_class = ArtworkImageManagementSerializer
+
+    permission_classes = (IsAdminUser,)
+
+    parser_classes = (
+        MultiPartParser,
+        FormParser,
+    )
+
+    def get_queryset(self):
+        queryset = ArtworkImage.objects.select_related("artwork")
+
+        artwork_id = self.request.query_params.get("artwork")
+
+        if artwork_id:
+            queryset = queryset.filter(artwork_id=artwork_id)
+
+        return queryset

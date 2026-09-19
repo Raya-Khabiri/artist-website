@@ -5,6 +5,7 @@ export type StudioArtwork = {
 
   category: number | null;
   technique: number | null;
+  technique_display: string;
 
   short_description: string;
   description: string;
@@ -49,4 +50,21 @@ export type StudioArtworkListResponse =
       next: string | null;
       previous: string | null;
       results: StudioArtwork[];
+    };
+
+    export type StudioArtworkImage = {
+  id: number;
+  artwork: number;
+  image: string;
+  alt_text: string;
+  display_order: number;
+};
+
+export type StudioArtworkImageListResponse =
+  | StudioArtworkImage[]
+  | {
+      count: number;
+      next: string | null;
+      previous: string | null;
+      results: StudioArtworkImage[];
     };

@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import ArtworkEditForm from "@/components/studio/ArtworkEditForm";
+import ArtworkImageManager from "@/components/studio/ArtworkImageManager";
 import { getStudioArtwork } from "@/lib/studio-api";
 import type { StudioArtwork } from "@/types/studio";
 
@@ -65,24 +66,9 @@ export default function EditArtworkPage() {
 
   if (isLoading) {
     return (
-      <main
-        className="
-          flex
-          min-h-screen
-          items-center
-          justify-center
-          bg-[#f4f1eb]
-        "
-      >
-        <p
-          className="
-            text-[10px]
-            uppercase
-            tracking-[0.3em]
-            text-black/40
-          "
-        >
-          Loading artwork…
+      <main className="flex min-h-screen items-center justify-center bg-[#f4f1eb]">
+        <p className="text-[10px] uppercase tracking-[0.3em] text-black/40">
+          Loading artwork...
         </p>
       </main>
     );
@@ -90,15 +76,7 @@ export default function EditArtworkPage() {
 
   if (error || !artwork) {
     return (
-      <main
-        className="
-          min-h-screen
-          bg-[#f4f1eb]
-          px-6
-          py-20
-          text-[#171717]
-        "
-      >
+      <main className="min-h-screen bg-[#f4f1eb] px-6 py-20 text-[#171717]">
         <div className="mx-auto max-w-3xl">
           <p className="text-sm text-[#9b1c1c]">
             {error || "Artwork not found."}
@@ -106,14 +84,7 @@ export default function EditArtworkPage() {
 
           <Link
             href="/studio/artworks"
-            className="
-              mt-6
-              inline-block
-              border-b
-              border-black/20
-              pb-1
-              text-sm
-            "
+            className="mt-6 inline-block border-b border-black/20 pb-1 text-sm"
           >
             Return to artworks
           </Link>
@@ -136,14 +107,8 @@ export default function EditArtworkPage() {
         lg:py-14
       "
     >
-      <div className="mx-auto max-w-3xl">
-        <header
-          className="
-            border-b
-            border-black/10
-            pb-10
-          "
-        >
+      <div className="mx-auto max-w-4xl">
+        <header className="border-b border-black/10 pb-10">
           <Link
             href="/studio/artworks"
             className="
@@ -152,52 +117,28 @@ export default function EditArtworkPage() {
               tracking-[0.28em]
               text-black/40
               transition
-
               hover:text-[#9b1c1c]
             "
           >
-            ← Artworks
+            Back to artworks
           </Link>
 
-          <p
-            className="
-              mt-8
-              text-[10px]
-              uppercase
-              tracking-[0.35em]
-              text-[#9b1c1c]
-            "
-          >
-            Collection management
+          <p className="mt-10 text-[10px] uppercase tracking-[0.3em] text-[#9b1c1c]">
+            Studio management
           </p>
 
-          <h1
-            className="
-              mt-4
-              font-serif
-              text-4xl
-              font-light
-
-              sm:text-5xl
-            "
-          >
+          <h1 className="mt-4 font-serif text-4xl font-light sm:text-5xl">
             Edit artwork
           </h1>
 
-          <p
-            className="
-              mt-5
-              text-sm
-              text-black/50
-            "
-          >
-            {artwork.title}
-          </p>
+          <p className="mt-4 text-sm text-black/50">{artwork.title}</p>
         </header>
 
-        <section className="mt-10">
+        <div className="mt-10">
           <ArtworkEditForm artwork={artwork} />
-        </section>
+
+          <ArtworkImageManager artworkId={artwork.id} />
+        </div>
       </div>
     </main>
   );

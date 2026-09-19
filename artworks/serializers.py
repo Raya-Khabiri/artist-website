@@ -5,7 +5,54 @@ from .models import Artwork, Category, ArtworkImage, Technique
 class ArtworkImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ArtworkImage
-        fields = ["id", "image", "alt_text"]
+        fields = [
+            "id",
+            "image",
+            "alt_text",
+            "display_order",
+        ]
+
+
+class ArtworkImageManagementSerializer(
+    serializers.ModelSerializer,
+):
+    class Meta:
+        model = ArtworkImage
+
+        fields = (
+            "id",
+            "artwork",
+            "image",
+            "alt_text",
+            "display_order",
+        )
+
+        read_only_fields = ("id",)
+
+    def validate_image(self, value):
+        max_size = 10 * 1024 * 1024
+
+        if value.size > max_size:
+            raise serializers.ValidationError("Image size must not exceed 10 MB.")
+
+        allowed_content_types = {
+            "image/jpeg",
+            "image/png",
+            "image/webp",
+        }
+
+        content_type = getattr(
+            value,
+            "content_type",
+            None,
+        )
+
+        if content_type and content_type not in allowed_content_types:
+            raise serializers.ValidationError(
+                "Only JPEG, PNG and WebP images are allowed."
+            )
+
+        return value
 
 
 class CategorySerializer(serializers.ModelSerializer):
