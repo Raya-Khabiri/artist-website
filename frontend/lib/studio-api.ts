@@ -70,3 +70,61 @@ export async function createStudioArtwork(
 
   return response.json();
 }
+
+export async function getStudioArtwork(
+  id: number,
+): Promise<StudioArtwork> {
+  const response = await fetch(
+    `/api/studio/artworks/${id}`,
+    {
+      method: "GET",
+      cache: "no-store",
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(response),
+    );
+  }
+
+  return response.json();
+}
+
+export async function updateStudioArtwork(
+  id: number,
+  formData: FormData,
+): Promise<StudioArtwork> {
+  const response = await fetch(
+    `/api/studio/artworks/${id}`,
+    {
+      method: "PATCH",
+      body: formData,
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(response),
+    );
+  }
+
+  return response.json();
+}
+
+export async function deleteStudioArtwork(
+  id: number,
+): Promise<void> {
+  const response = await fetch(
+    `/api/studio/artworks/${id}`,
+    {
+      method: "DELETE",
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(response),
+    );
+  }
+}

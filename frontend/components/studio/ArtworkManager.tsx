@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import Link from "next/link";
 import { getStudioArtworks } from "@/lib/studio-api";
 import type { StudioArtwork } from "@/types/studio";
 
@@ -203,6 +203,26 @@ export default function ArtworkManager() {
               >
                 ID {artwork.id} · {artwork.slug}
               </p>
+              <Link
+                href={`/studio/artworks/${artwork.id}/edit`}
+                className="
+                mt-4
+                inline-block
+                border-b
+                border-black/20
+                pb-1
+                text-[9px]
+                uppercase
+                tracking-[0.2em]
+                text-black/50
+                transition
+
+                hover:border-[#9b1c1c]
+                hover:text-[#9b1c1c]
+              "
+              >
+                Edit artwork
+              </Link>
             </div>
 
             <div>

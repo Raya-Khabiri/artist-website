@@ -47,6 +47,12 @@ class ArtworkManagementSerializer(serializers.ModelSerializer):
         max_length=100,
     )
 
+    technique_display = serializers.CharField(
+        source="technique.name",
+        read_only=True,
+        default="",
+    )
+
     class Meta:
         model = Artwork
         fields = "__all__"
