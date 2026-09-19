@@ -87,25 +87,24 @@ export default function StudioArtworksPage() {
             </p>
           </div>
 
-          <button
-            type="button"
-            disabled
-            title="Artwork creation will be added next."
+          <Link
+            href="/studio/artworks/new"
             className="
-              w-fit
-              cursor-not-allowed
-              border
-              border-black/15
-              px-5
-              py-3
-              text-[10px]
-              uppercase
-              tracking-[0.23em]
-              text-black/30
+                w-fit
+                bg-[#171717]
+                px-5
+                py-3
+                text-[10px]
+                uppercase
+                tracking-[0.23em]
+                text-white
+                transition
+
+                hover:bg-[#9b1c1c]
             "
           >
             Add artwork
-          </button>
+          </Link>
         </header>
 
         <section className="mt-10">

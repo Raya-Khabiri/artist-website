@@ -50,3 +50,23 @@ export async function getStudioArtworks(): Promise<
 
   return data.results ?? [];
 }
+
+export async function createStudioArtwork(
+  formData: FormData,
+): Promise<StudioArtwork> {
+  const response = await fetch(
+    "/api/studio/artworks",
+    {
+      method: "POST",
+      body: formData,
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(response),
+    );
+  }
+
+  return response.json();
+}

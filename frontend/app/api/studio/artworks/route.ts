@@ -59,3 +59,54 @@ export async function GET() {
     );
   }
 }
+
+export async function POST(request: Request) {
+  const accessToken = await getAccessToken();
+
+  if (!accessToken) {
+    return NextResponse.json(
+      {
+        detail: "Authentication required.",
+      },
+      {
+        status: 401,
+      },
+    );
+  }
+
+  try {
+    const formData = await request.formData();
+
+    const djangoResponse = await fetch(
+      `${API_URL}/api/artworks/manage/artworks/`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: formData,
+        cache: "no-store",
+      },
+    );
+
+    const data = await djangoResponse.json();
+
+    return NextResponse.json(data, {
+      status: djangoResponse.status,
+    });
+  } catch (error) {
+    console.error(
+      "Unable to create studio artwork:",
+      error,
+    );
+
+    return NextResponse.json(
+      {
+        detail: "Unable to create artwork.",
+      },
+      {
+        status: 503,
+      },
+    );
+  }
+}

@@ -1,7 +1,13 @@
+import base64
+
+from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import (
+    SimpleUploadedFile,
+)
 from django.urls import reverse
 from rest_framework.test import APITestCase
-from django.contrib.auth import get_user_model
-from .models import Artwork, Category
+
+from .models import Artwork, Category, Technique
 
 
 class PublicArtworkAPITests(APITestCase):
@@ -14,6 +20,7 @@ class PublicArtworkAPITests(APITestCase):
             "print_available": False,
             "stock": 1,
             "original_price": "100.00",
+            "currency": "GBP",
             "year": 2025,
         }
 
@@ -31,7 +38,10 @@ class PublicArtworkAPITests(APITestCase):
 
         response = self.client.get(reverse("artwork-list"))
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.status_code,
+            200,
+        )
 
         returned_slugs = [item["slug"] for item in response.data]
 
@@ -49,11 +59,16 @@ class PublicArtworkAPITests(APITestCase):
         response = self.client.get(
             reverse(
                 "artwork-detail",
-                kwargs={"slug": draft.slug},
+                kwargs={
+                    "slug": draft.slug,
+                },
             )
         )
 
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(
+            response.status_code,
+            404,
+        )
 
     def test_category_filter(self):
         paintings = Category.objects.create(name="Paintings")
@@ -69,10 +84,15 @@ class PublicArtworkAPITests(APITestCase):
 
         response = self.client.get(
             reverse("artwork-list"),
-            {"category": paintings.slug},
+            {
+                "category": paintings.slug,
+            },
         )
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.status_code,
+            200,
+        )
 
         self.assertEqual(
             [item["slug"] for item in response.data],
@@ -93,10 +113,15 @@ class PublicArtworkAPITests(APITestCase):
 
         response = self.client.get(
             reverse("artwork-list"),
-            {"available": "true"},
+            {
+                "available": "true",
+            },
         )
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.status_code,
+            200,
+        )
 
         self.assertEqual(
             [item["slug"] for item in response.data],
@@ -116,14 +141,22 @@ class PublicArtworkAPITests(APITestCase):
 
         response = self.client.get(
             reverse("artwork-list"),
-            {"ordering": "year_desc"},
+            {
+                "ordering": "year_desc",
+            },
         )
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.status_code,
+            200,
+        )
 
         self.assertEqual(
             [item["slug"] for item in response.data],
-            [newer.slug, older.slug],
+            [
+                newer.slug,
+                older.slug,
+            ],
         )
 
 
@@ -133,16 +166,16 @@ class ArtworkManagementAPITests(APITestCase):
 
         self.regular_user = user_model.objects.create_user(
             username="regular_customer",
-            email="test.customer@example.com",
-            password="StrongTestPass_2026!",
+            email="customer@example.com",
+            password="StrongTestPassword123!",
             first_name="Regular",
             last_name="Customer",
         )
 
         self.staff_user = user_model.objects.create_user(
             username="studio_artist",
-            email="khabiri.raya@gmail.com",
-            password="raya1384",
+            email="artist@example.com",
+            password="StrongStaffPassword123!",
             first_name="Studio",
             last_name="Artist",
             is_staff=True,
@@ -152,7 +185,9 @@ class ArtworkManagementAPITests(APITestCase):
             "artwork-management-list",
         )
 
-    def test_anonymous_user_cannot_access_management_api(self):
+    def test_anonymous_user_cannot_access_management_api(
+        self,
+    ):
         response = self.client.get(
             self.list_url,
         )
@@ -162,7 +197,9 @@ class ArtworkManagementAPITests(APITestCase):
             401,
         )
 
-    def test_regular_user_cannot_access_management_api(self):
+    def test_regular_user_cannot_access_management_api(
+        self,
+    ):
         self.client.force_authenticate(
             user=self.regular_user,
         )
@@ -176,11 +213,14 @@ class ArtworkManagementAPITests(APITestCase):
             403,
         )
 
-    def test_staff_user_can_access_management_api(self):
+    def test_staff_user_can_access_management_api(
+        self,
+    ):
         Artwork.objects.create(
             title="Private studio draft",
             main_image="artworks/main/private.jpg",
             is_published=False,
+            currency="GBP",
         )
 
         self.client.force_authenticate(
@@ -194,4 +234,59 @@ class ArtworkManagementAPITests(APITestCase):
         self.assertEqual(
             response.status_code,
             200,
+        )
+
+    def test_staff_can_create_artwork_with_typed_technique(
+        self,
+    ):
+        self.client.force_authenticate(
+            user=self.staff_user,
+        )
+
+        image_content = base64.b64decode(
+            "R0lGODlhAQABAIAAAAAAAP///" "ywAAAAAAQABAAACAUwAOw=="
+        )
+
+        image = SimpleUploadedFile(
+            name="test-artwork.gif",
+            content=image_content,
+            content_type="image/gif",
+        )
+
+        response = self.client.post(
+            self.list_url,
+            {
+                "title": "Typed technique artwork",
+                "main_image": image,
+                "technique_name": ("  Acrylic   on canvas  "),
+                "currency": "GBP",
+                "is_published": False,
+            },
+            format="multipart",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            201,
+            response.data,
+        )
+
+        artwork = Artwork.objects.get(
+            title="Typed technique artwork",
+        )
+
+        self.assertIsNotNone(
+            artwork.technique,
+        )
+
+        self.assertEqual(
+            artwork.technique.name,
+            "Acrylic on canvas",
+        )
+
+        self.assertEqual(
+            Technique.objects.filter(
+                name__iexact="Acrylic on canvas",
+            ).count(),
+            1,
         )
