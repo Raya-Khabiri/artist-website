@@ -5,6 +5,8 @@ import type {
   StudioArtworkListResponse,
 } from "@/types/studio";
 
+import type { SiteSettings } from "@/lib/api";
+
 async function getErrorMessage(
   response: Response,
 ): Promise<string> {
@@ -214,4 +216,42 @@ export async function deleteStudioArtworkImage(
       await getErrorMessage(response),
     );
   }
+}
+
+export async function getStudioSiteContent(): Promise<SiteSettings> {
+  const response = await fetch(
+    "/api/studio/site-content",
+    {
+      method: "GET",
+      cache: "no-store",
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(response),
+    );
+  }
+
+  return response.json();
+}
+
+export async function updateStudioSiteContent(
+  formData: FormData,
+): Promise<SiteSettings> {
+  const response = await fetch(
+    "/api/studio/site-content",
+    {
+      method: "PATCH",
+      body: formData,
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(response),
+    );
+  }
+
+  return response.json();
 }

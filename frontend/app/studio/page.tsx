@@ -16,7 +16,7 @@ const dashboardItems = [
     title: "Site content",
     description:
       "Update the homepage, artist profile, contact details and process video.",
-    href: "/studio/content",
+    href: "/studio/site-content",
   },
   {
     title: "Orders",
@@ -130,8 +130,8 @@ export default function StudioPage() {
           {dashboardItems.map((item, index) => {
             const isAvailable =
               item.href === "/account/messages" ||
-              item.href === "/studio/artworks";
-
+              item.href === "/studio/artworks" ||
+              item.href === "/studio/site-content";
             const content = (
               <>
                 <div
