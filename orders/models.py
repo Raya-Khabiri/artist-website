@@ -28,6 +28,31 @@ class Order(models.Model):
     customer_phone = models.CharField(max_length=30, blank=True)
 
     address = models.TextField(blank=True)
+
+    address_line_1 = models.CharField(
+        max_length=250,
+        blank=True,
+    )
+
+    address_line_2 = models.CharField(
+        max_length=250,
+        blank=True,
+    )
+
+    city = models.CharField(
+        max_length=120,
+        blank=True,
+    )
+
+    postcode = models.CharField(
+        max_length=20,
+        blank=True,
+    )
+
+    country_code = models.CharField(
+        max_length=2,
+        default="GB",
+    )
     note = models.TextField(blank=True)
 
     STATUS_CHOICES = [

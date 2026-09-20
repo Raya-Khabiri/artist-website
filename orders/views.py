@@ -1,11 +1,16 @@
 from rest_framework import (
+    generics,
     mixins,
     viewsets,
 )
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import (
+    IsAdminUser,
+    IsAuthenticated,
+)
 
 from .models import Order
 from .serializers import (
+    CheckoutCreateSerializer,
     OrderManagementSerializer,
 )
 
@@ -48,3 +53,11 @@ class OrderManagementViewSet(
             )
 
         return queryset
+
+
+class CheckoutCreateAPIView(
+    generics.CreateAPIView,
+):
+    serializer_class = CheckoutCreateSerializer
+
+    permission_classes = (IsAuthenticated,)
