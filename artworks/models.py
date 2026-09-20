@@ -114,7 +114,7 @@ class Artwork(models.Model):
 
     currency = models.CharField(
         max_length=3,
-        default="CAD",
+        default="GBP",
     )
 
     show_price = models.BooleanField(
@@ -139,7 +139,7 @@ class Artwork(models.Model):
     )
 
     width_mm = models.DecimalField(
-        max_digits=810,
+        max_digits=10,
         decimal_places=2,
         null=True,
         blank=True,

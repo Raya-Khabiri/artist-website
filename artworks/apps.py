@@ -2,4 +2,9 @@ from django.apps import AppConfig
 
 
 class ArtworksConfig(AppConfig):
-    name = 'artworks'
+    default_auto_field = "django.db.models.BigAutoField"
+
+    name = "artworks"
+
+    def ready(self):
+        from . import signals  # noqa: F401
