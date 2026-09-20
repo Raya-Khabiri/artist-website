@@ -131,7 +131,8 @@ export default function StudioPage() {
             const isAvailable =
               item.href === "/account/messages" ||
               item.href === "/studio/artworks" ||
-              item.href === "/studio/site-content";
+              item.href === "/studio/site-content" ||
+              item.href === "/studio/orders";
             const content = (
               <>
                 <div

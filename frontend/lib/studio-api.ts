@@ -1,12 +1,17 @@
+import type { SiteSettings } from "@/lib/api";
+
+import type {
+  OrderStatus,
+  StudioOrder,
+  StudioOrderListResponse,
+} from "@/types/order";
+
 import type {
   StudioArtwork,
   StudioArtworkImage,
   StudioArtworkImageListResponse,
   StudioArtworkListResponse,
 } from "@/types/studio";
-
-import type { SiteSettings } from "@/lib/api";
-
 async function getErrorMessage(
   response: Response,
 ): Promise<string> {
@@ -244,6 +249,83 @@ export async function updateStudioSiteContent(
     {
       method: "PATCH",
       body: formData,
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(response),
+    );
+  }
+
+  return response.json();
+}
+
+export async function getStudioOrders(
+  status?: OrderStatus,
+): Promise<StudioOrder[]> {
+  const query = status
+    ? `?status=${encodeURIComponent(status)}`
+    : "";
+
+  const response = await fetch(
+    `/api/studio/orders${query}`,
+    {
+      method: "GET",
+      cache: "no-store",
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(response),
+    );
+  }
+
+  const data: StudioOrderListResponse =
+    await response.json();
+
+  if (Array.isArray(data)) {
+    return data;
+  }
+
+  return data.results ?? [];
+}
+
+export async function getStudioOrder(
+  id: number,
+): Promise<StudioOrder> {
+  const response = await fetch(
+    `/api/studio/orders/${id}`,
+    {
+      method: "GET",
+      cache: "no-store",
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(response),
+    );
+  }
+
+  return response.json();
+}
+
+export async function updateStudioOrderStatus(
+  id: number,
+  status: OrderStatus,
+): Promise<StudioOrder> {
+  const response = await fetch(
+    `/api/studio/orders/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status,
+      }),
     },
   );
 

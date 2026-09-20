@@ -1,15 +1,34 @@
 from django.db import models
 from artworks.models import Artwork
+from uuid import uuid4
+
+from django.conf import settings
+from django.db import models
+
+from artworks.models import Artwork
 
 
 class Order(models.Model):
+    reference = models.UUIDField(
+        default=uuid4,
+        editable=False,
+        unique=True,
+    )
+
+    customer = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="orders",
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+    )
+
     customer_name = models.CharField(max_length=150)
     customer_email = models.EmailField()
     customer_phone = models.CharField(max_length=30, blank=True)
 
     address = models.TextField(blank=True)
     note = models.TextField(blank=True)
-
 
     STATUS_CHOICES = [
         ("pending", "Pending"),
@@ -32,7 +51,22 @@ class Order(models.Model):
         default=0,
     )
 
+    currency = models.CharField(
+        max_length=3,
+        default="GBP",
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
+    class Meta:
+        ordering = ("-created_at",)
+
+    def __str__(self):
+        return f"Order {self.reference}"
 
 
 class OrderItem(models.Model):
