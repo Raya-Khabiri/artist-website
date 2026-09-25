@@ -39,7 +39,11 @@ export default async function ContactPage() {
             <div className="border-t border-black/15 pt-8 lg:col-span-5">
               {settings?.contact_email ? (
                 <a
-                  href={`mailto:${settings.contact_email}`}
+                  href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+                    settings.contact_email,
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
                   className="block border-b border-black/15 py-5 text-lg transition hover:text-[#9b1c1c]"
                 >
                   {settings.contact_email}
@@ -52,23 +56,16 @@ export default async function ContactPage() {
 
               {settings?.instagram_url && (
                 <a
-                  href={settings.instagram_url}
+                  href={
+                    settings.instagram_url.startsWith("http")
+                      ? settings.instagram_url
+                      : `https://${settings.instagram_url}`
+                  }
                   target="_blank"
                   rel="noreferrer"
                   className="block border-b border-black/15 py-5 text-lg transition hover:text-[#9b1c1c]"
                 >
                   Instagram
-                </a>
-              )}
-
-              {settings?.facebook_url && (
-                <a
-                  href={settings.facebook_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="block border-b border-black/15 py-5 text-lg transition hover:text-[#9b1c1c]"
-                >
-                  Facebook
                 </a>
               )}
             </div>

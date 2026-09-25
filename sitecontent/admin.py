@@ -52,7 +52,6 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                     "contact_email",
                     "phone",
                     "instagram_url",
-                    "facebook_url",
                 ),
             },
         ),
