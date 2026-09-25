@@ -173,7 +173,7 @@ export default async function AboutPage() {
               <div
                 className="
                   mt-8
-                  space-y-6
+                  space-y-
                   text-base
                   font-light
                   leading-[1.65]

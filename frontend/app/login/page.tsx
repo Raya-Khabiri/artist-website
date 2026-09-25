@@ -11,7 +11,18 @@ export const metadata: Metadata = {
     "Sign in to your EAMORA account to manage enquiries and future orders.",
 };
 
-export default function LoginPage() {
+type LoginPageProps = {
+  searchParams: Promise<{
+    next?: string;
+  }>;
+};
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const { next } = await searchParams;
+
+  const redirectTo =
+    typeof next === "string" && next.startsWith("/") && !next.startsWith("//")
+      ? next
+      : "/";
   return (
     <>
       <Navbar />
@@ -35,7 +46,7 @@ export default function LoginPage() {
             </div>
 
             <div className="lg:col-span-5">
-              <LoginForm />
+              <LoginForm redirectTo={redirectTo} />
             </div>
           </div>
         </Container>

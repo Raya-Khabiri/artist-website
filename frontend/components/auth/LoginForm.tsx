@@ -6,7 +6,10 @@ import { useState, type FormEvent } from "react";
 
 import { useAuth } from "@/components/auth/AuthProvider";
 
-export default function LoginForm() {
+type LoginFormProps = {
+  redirectTo?: string;
+};
+export default function LoginForm({ redirectTo = "/" }: LoginFormProps) {
   const router = useRouter();
   const { login } = useAuth();
 
@@ -26,7 +29,7 @@ export default function LoginForm() {
         password,
       });
 
-      router.push("/contact");
+      router.replace(redirectTo);
       router.refresh();
     } catch (error) {
       setError(

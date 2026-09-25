@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useCart } from "@/components/cart/CartProvider";
 import Image from "next/image";
 
 const navItems = [
@@ -25,7 +26,7 @@ const navItems = [
 export default function Navbar() {
   const router = useRouter();
   const { user, isLoading, logout } = useAuth();
-
+  const { itemCount } = useCart();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
@@ -130,7 +131,44 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
+          {!isLoading && user && (
+            <Link
+              href="/cart"
+              aria-label={`Basket with ${itemCount} items`}
+              className="
+              inline-flex
+              items-center
+              gap-2
+              text-sm
+              tracking-[0.12em]
+              text-black/60
+              transition-colors
+              duration-300
+              hover:text-black
+            "
+            >
+              <span>Basket</span>
 
+              <span
+                className="
+                inline-flex
+                min-w-5
+                items-center
+                justify-center
+                border
+                border-black/20
+                px-1.5
+                py-0.5
+                text-[9px]
+                leading-none
+                tracking-normal
+                text-[#9b1c1c]
+              "
+              >
+                {itemCount}
+              </span>
+            </Link>
+          )}
           {!isLoading &&
             (user ? (
               <>
@@ -280,6 +318,31 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
+          {!isLoading && user && (
+            <Link
+              href="/cart"
+              onClick={() => setIsMenuOpen(false)}
+              className="
+              flex
+              items-center
+              justify-between
+              border-b
+              border-black/10
+              py-4
+              text-sm
+              tracking-[0.14em]
+              text-black/70
+              transition-colors
+              hover:text-black
+            "
+            >
+              <span>Basket</span>
+
+              <span className="text-xs tracking-normal text-[#9b1c1c]">
+                {itemCount}
+              </span>
+            </Link>
+          )}
 
           {!isLoading &&
             (user ? (

@@ -4,13 +4,13 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+type Stage = "start" | "docked" | "leaving" | "hidden";
+
 export default function SitePreloader() {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
 
-  const [isVisible, setIsVisible] = useState(true);
-
-  const [isLeaving, setIsLeaving] = useState(false);
+  const [stage, setStage] = useState<Stage>("start");
 
   useEffect(() => {
     if (!isHomePage) {
@@ -18,166 +18,101 @@ export default function SitePreloader() {
     }
 
     const previousOverflow = document.body.style.overflow;
-
     document.body.style.overflow = "hidden";
 
-    const leaveAfter = 3400;
-    const removeAfter = 4100;
+    // Timings (ms)
+    const dockAt = 120; // start sliding the logo in
+    const leaveAt = 3900; // start fading the preloader background out
+    const hideAt = 4700; // fully remove the preloader
 
-    const leaveTimer = window.setTimeout(() => {
-      setIsLeaving(true);
-    }, leaveAfter);
-
-    const removeTimer = window.setTimeout(() => {
-      setIsVisible(false);
-
+    const dockTimer = window.setTimeout(() => setStage("docked"), dockAt);
+    const leaveTimer = window.setTimeout(() => setStage("leaving"), leaveAt);
+    const hideTimer = window.setTimeout(() => {
+      setStage("hidden");
       document.body.style.overflow = previousOverflow;
-    }, removeAfter);
+    }, hideAt);
 
     return () => {
+      window.clearTimeout(dockTimer);
       window.clearTimeout(leaveTimer);
-      window.clearTimeout(removeTimer);
-
+      window.clearTimeout(hideTimer);
       document.body.style.overflow = previousOverflow;
     };
   }, [isHomePage]);
 
-  if (!isHomePage) {
+  if (!isHomePage || stage === "hidden") {
     return null;
   }
 
-  if (!isVisible) {
-    return null;
-  }
-
-  const logoAnimation = isHomePage
-    ? "eamora_mist_logo 2.3s cubic-bezier(0.22,1,0.36,1) 0.15s forwards"
-    : "eamora_mist_logo 0.75s ease-out forwards";
+  const isDocked = stage === "docked" || stage === "leaving";
+  const isLeaving = stage === "leaving";
 
   return (
     <div
       role="status"
       aria-label="Loading EAMORA"
-      className={`
-        fixed
-        inset-0
-        z-[9999]
-        flex
-        items-center
-        justify-center
-        overflow-hidden
-        bg-[#faf9f6]
-        transition-all
-        ease-[cubic-bezier(0.76,0,0.24,1)]
-
-        ${isHomePage ? "duration-700" : "duration-300"}
-
-        ${isLeaving ? "scale-[1.015] opacity-0" : "scale-100 opacity-100"}
-      `}
+      className="fixed inset-0 z-[9999] overflow-hidden bg-[#faf9f6]"
+      style={{
+        opacity: isLeaving ? 0 : 1,
+        transition: "opacity 800ms ease-in-out",
+        // Let clicks through once fully faded, just in case removal is delayed
+        pointerEvents: isLeaving ? "none" : "auto",
+      }}
     >
+      {/* Mirrors the Navbar's header bar exactly, so the logo lands
+          in the identical spot before the preloader fades away. */}
+      <div className="flex h-20 w-full items-center px-6 md:px-10 lg:px-16">
+        <div
+          className="relative h-[72px] w-60 sm:w-64"
+          style={{
+            opacity: isDocked ? 1 : 0,
+            transform: isDocked ? "translateX(0)" : "translateX(100vw)",
+            transition:
+              "transform 3200ms cubic-bezier(0.25,0.1,0.25,1), opacity 500ms ease-out",
+          }}
+        >
+          <Image
+            src="/images/logo/eamora-logo-v2.png"
+            alt="EAMORA"
+            fill
+            priority
+            sizes="256px"
+            className="object-contain object-left"
+          />
+        </div>
+      </div>
+
+      {/* Subtle loading indicator, independent of the logo motion */}
       <div
         className="
-          w-full
-          px-6
-          sm:px-10
-          md:px-16
+          absolute
+          bottom-14
+          left-1/2
+          flex
+          -translate-x-1/2
+          items-center
+          gap-3
+          text-[9px]
+          uppercase
+          tracking-[0.34em]
+          text-black/40
+
+          sm:text-[10px]
         "
+        style={{
+          opacity: isLeaving ? 0 : isDocked ? 1 : 0,
+          transition: "opacity 500ms ease",
+        }}
       >
-        <div
-          className={`
-            mx-auto
-            w-full
-            transition-[max-width]
-            duration-500
-
-            ${isHomePage ? "max-w-[1000px]" : "max-w-[360px]"}
-          `}
-        >
-          <div
-            className="
-              eamora-preloader-motion
-              opacity-0
-            "
-            style={{
-              animation: logoAnimation,
-            }}
-          >
-            <div
-              className="
-                eamora-preloader-motion
-                relative
-              "
-              style={
-                isHomePage
-                  ? {
-                      animation:
-                        "eamora_logo_breathe 2.2s ease-in-out 2.35s infinite alternate",
-                    }
-                  : undefined
-              }
-            >
-              <Image
-                src="/images/logo/eamora-preloader.png"
-                alt="EAMORA"
-                width={2048}
-                height={332}
-                priority
-                sizes={
-                  isHomePage
-                    ? "(max-width: 640px) 90vw, (max-width: 1024px) 84vw, 1000px"
-                    : "(max-width: 640px) 70vw, 360px"
-                }
-                className="
-                  block
-                  h-auto
-                  w-full
-                  select-none
-                "
-              />
-            </div>
-          </div>
-
-          {isHomePage && (
-            <div
-              className="
-                eamora-preloader-motion
-                mt-8
-                flex
-                items-center
-                justify-center
-                gap-3
-                opacity-0
-                text-[9px]
-                uppercase
-                tracking-[0.34em]
-                text-black/40
-
-                sm:text-[10px]
-              "
-              style={{
-                animation: "eamora_loading_text 1s ease 1.65s forwards",
-              }}
-            >
-              <span>EAMORA</span>
-
-              <span
-                aria-hidden="true"
-                className="
-                  eamora-preloader-motion
-                  h-1
-                  w-1
-                  rounded-full
-                  bg-[#9b1c1c]
-                "
-                style={{
-                  animation: "eamora_loading_pulse 1.1s ease-in-out infinite",
-                }}
-              />
-
-              <span>Loading</span>
-            </div>
-          )}
-        </div>
+        <span>EAMORA</span>
+        <span
+          aria-hidden="true"
+          className="h-1 w-1 rounded-full bg-[#9b1c1c]"
+          style={{
+            animation: "eamora_loading_pulse 1.1s ease-in-out infinite",
+          }}
+        />
+        <span>Loading</span>
       </div>
     </div>
   );
