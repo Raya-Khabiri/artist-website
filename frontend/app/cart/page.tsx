@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import CartView from "@/components/cart/CartView";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
@@ -10,7 +11,14 @@ export const metadata: Metadata = {
   description: "Review the artworks selected for purchase.",
 };
 
-export default function CartPage() {
+export default async function CartPage() {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("access_token")?.value;
+
+  if (!accessToken) {
+    redirect("/login?next=/cart");
+  }
+
   return (
     <>
       <Navbar />
