@@ -8,6 +8,7 @@ import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import Container from "@/components/ui/Container";
 import ArtworkCard from "@/components/artwork/ArtworkCard";
+import ArtworkPurchasePanel from "@/components/artwork/ArtworkPurchasePanel";
 
 type ArtworkPageProps = {
   params: Promise<{
@@ -101,6 +102,11 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
   const originalAvailable =
     artwork.original_available &&
     artwork.sale_status === "available" &&
+    artwork.stock > 0;
+
+  const printAvailable =
+    artwork.print_available &&
+    artwork.print_price !== null &&
     artwork.stock > 0;
 
   const siteUrl = (
@@ -254,27 +260,18 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
                   </p>
                 )}
 
-                <Link
-                  href={`/contact?artwork=${encodeURIComponent(artwork.title)}`}
-                  className="
-                    mt-10
-                    inline-flex
-                    items-center
-                    gap-3
-                    border-b
-                    border-black
-                    pb-2
-                    text-xs
-                    uppercase
-                    tracking-[0.2em]
-                  "
-                >
-                  {originalAvailable
-                    ? "Inquire about this work"
-                    : "Contact the artist"}
-
-                  <span aria-hidden="true">→</span>
-                </Link>
+                <ArtworkPurchasePanel
+                  artworkId={artwork.id}
+                  slug={artwork.slug}
+                  title={artwork.title}
+                  image={mainImage}
+                  currency={artwork.currency}
+                  originalAvailable={originalAvailable}
+                  originalPrice={artwork.original_price}
+                  printAvailable={printAvailable}
+                  printPrice={artwork.print_price}
+                  printStock={artwork.stock}
+                />
               </aside>
             </div>
             {(previousArtwork || nextArtwork) && (

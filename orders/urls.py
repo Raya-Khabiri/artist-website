@@ -4,7 +4,10 @@ from django.urls import (
 )
 from rest_framework.routers import DefaultRouter
 
-from .views import OrderManagementViewSet
+from .views import (
+    CheckoutCreateAPIView,
+    OrderManagementViewSet,
+)
 
 router = DefaultRouter()
 
@@ -14,6 +17,15 @@ router.register(
     basename="order-management",
 )
 
+
 urlpatterns = [
-    path("", include(router.urls)),
+    path(
+        "checkout/",
+        CheckoutCreateAPIView.as_view(),
+        name="checkout-create",
+    ),
+    path(
+        "",
+        include(router.urls),
+    ),
 ]

@@ -1,20 +1,11 @@
 import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
 
 import SitePreloader from "@/components/layout/SitePreloader";
 
 import "./globals.css";
 import AuthProvider from "@/components/auth/AuthProvider";
 
-// const geistSans = Geist({
-//   variable: "--font-geist-sans",
-//   subsets: ["latin"],
-// });
-
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
+import CartProvider from "@/components/cart/CartProvider";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
@@ -91,8 +82,11 @@ export default function RootLayout({
     <html lang="en" className="h-full antialiased">
       <body className="flex min-h-full flex-col">
         <AuthProvider>
-          <SitePreloader />
-          {children}
+          <CartProvider>
+            <SitePreloader />
+
+            {children}
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>
