@@ -28,7 +28,6 @@ export default function ConversationThread({
     }
 
     if (!user) {
-      setIsLoading(false);
       return;
     }
 
@@ -93,7 +92,7 @@ export default function ConversationThread({
     }
   }
 
-  if (isAuthLoading || isLoading) {
+  if (isAuthLoading) {
     return <p className="text-sm text-black/45">Loading conversation...</p>;
   }
 
@@ -124,6 +123,14 @@ export default function ConversationThread({
     );
   }
 
+  if (isLoading) {
+    return (
+      <p className="border-t border-black/15 pt-8 text-sm text-black/45">
+        Loading conversations...
+      </p>
+    );
+  }
+
   if (error && !conversation) {
     return <p className="text-[#9b1c1c]">{error}</p>;
   }
@@ -147,20 +154,8 @@ export default function ConversationThread({
         "
       >
         <div>
-          <p
-            className="
-              text-xs
-              uppercase
-              tracking-[0.25em]
-              text-black/40
-            "
-          >
-            Conversation #{conversation.id}
-          </p>
-
           <h1
             className="
-              mt-4
               font-serif
               text-4xl
               font-light

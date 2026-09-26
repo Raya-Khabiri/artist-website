@@ -99,3 +99,30 @@ export async function sendMessage(
 
   return response.json();
 }
+
+type UnreadMessageCountResponse = {
+  unread_count: number;
+};
+
+export async function getUnreadMessageCount(): Promise<number> {
+  const response = await fetch(
+    "/api/messages/unread-count",
+    {
+      method: "GET",
+      cache: "no-store",
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      await getErrorMessage(response),
+    );
+  }
+
+  const data: UnreadMessageCountResponse =
+    await response.json();
+
+  return Number.isFinite(data.unread_count)
+    ? data.unread_count
+    : 0;
+}
