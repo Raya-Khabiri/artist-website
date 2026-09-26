@@ -8,6 +8,8 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { useCart } from "@/components/cart/CartProvider";
 import Image from "next/image";
 
+import { getUnreadMessageCount } from "@/lib/conversation-api";
+
 const navItems = [
   {
     label: "Gallery",
@@ -30,6 +32,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const [unreadMessageCount, setUnreadMessageCount] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,6 +47,35 @@ export default function Navbar() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    let isActive = true;
+
+    async function loadUnreadMessageCount() {
+      try {
+        const count = await getUnreadMessageCount();
+
+        if (isActive) {
+          setUnreadMessageCount(count);
+        }
+      } catch (error) {
+        console.error("Unable to load message notifications:", error);
+      }
+    }
+
+    void loadUnreadMessageCount();
+
+    const intervalId = window.setInterval(loadUnreadMessageCount, 15000);
+
+    return () => {
+      isActive = false;
+      window.clearInterval(intervalId);
+    };
+  }, [user?.id]);
 
   async function handleLogout() {
     setIsSigningOut(true);
@@ -172,6 +204,21 @@ export default function Navbar() {
           {!isLoading &&
             (user ? (
               <>
+                {user.is_staff && (
+                  <Link
+                    href="/studio"
+                    className="
+                      text-sm
+                      tracking-[0.12em]
+                      text-[#9b1c1c]
+                      transition-colors
+                      duration-300
+                      hover:text-black
+                    "
+                  >
+                    Studio
+                  </Link>
+                )}
                 <Link
                   href="/account/messages"
                   className="
@@ -181,9 +228,33 @@ export default function Navbar() {
                     transition-colors
                     duration-300
                     hover:text-black
+                    inline-flex
+                    items-center
+                    gap-2
                   "
                 >
-                  Messages
+                  <span>Messages</span>
+
+                  {unreadMessageCount > 0 && (
+                    <span
+                      className="
+                        inline-flex
+                        min-w-5
+                        items-center
+                        justify-center
+                        rounded-full
+                        bg-[#9b1c1c]
+                        px-1.5
+                        py-0.5
+                        text-[9px]
+                        leading-none
+                        tracking-normal
+                        text-white
+                      "
+                    >
+                      {unreadMessageCount > 99 ? "99+" : unreadMessageCount}
+                    </span>
+                  )}
                 </Link>
 
                 <button
@@ -347,6 +418,24 @@ export default function Navbar() {
           {!isLoading &&
             (user ? (
               <>
+                {user.is_staff && (
+                  <Link
+                    href="/studio"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="
+                      border-b
+                      border-black/10
+                      py-4
+                      text-sm
+                      tracking-[0.14em]
+                      text-[#9b1c1c]
+                      transition-colors
+                      hover:text-black
+                    "
+                  >
+                    Studio
+                  </Link>
+                )}
                 <Link
                   href="/account/messages"
                   onClick={() => setIsMenuOpen(false)}
@@ -359,9 +448,33 @@ export default function Navbar() {
                     text-black/70
                     transition-colors
                     hover:text-black
+                    flex
+                  items-center
+                  justify-between
                   "
                 >
-                  Messages
+                  <span>Messages</span>
+
+                  {unreadMessageCount > 0 && (
+                    <span
+                      className="
+                        inline-flex
+                        min-w-5
+                        items-center
+                        justify-center
+                        rounded-full
+                        bg-[#9b1c1c]
+                        px-1.5
+                        py-0.5
+                        text-[9px]
+                        leading-none
+                        tracking-normal
+                        text-white
+                      "
+                    >
+                      {unreadMessageCount > 99 ? "99+" : unreadMessageCount}
+                    </span>
+                  )}
                 </Link>
 
                 <button

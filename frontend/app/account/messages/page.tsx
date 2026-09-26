@@ -4,6 +4,7 @@ import ConversationList from "@/components/account/ConversationList";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import Container from "@/components/ui/Container";
+import ContactMessageForm from "@/components/contact/ContactMessageForm";
 
 export const metadata: Metadata = {
   title: "Messages | EAMORA",
@@ -35,6 +36,14 @@ export default function MessagesPage() {
 
             <div className="lg:col-span-7 lg:col-start-6">
               <ConversationList />
+            </div>
+          </div>
+          <div className="mt-20 border-t border-black/10 pt-16">
+            <div className="mr-auto max-w-2xl">
+              <ContactMessageForm
+                redirectAfterSubmit
+                title="Start a new conversation"
+              />
             </div>
           </div>
         </Container>

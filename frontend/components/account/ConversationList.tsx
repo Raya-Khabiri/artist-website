@@ -20,7 +20,6 @@ export default function ConversationList() {
     }
 
     if (!user) {
-      setIsLoading(false);
       return;
     }
 
@@ -55,7 +54,7 @@ export default function ConversationList() {
     };
   }, [user, isAuthLoading]);
 
-  if (isAuthLoading || isLoading) {
+  if (isAuthLoading) {
     return (
       <p className="border-t border-black/15 pt-8 text-sm text-black/45">
         Loading conversations...
@@ -88,6 +87,14 @@ export default function ConversationList() {
     );
   }
 
+  if (isLoading) {
+    return (
+      <p className="border-t border-black/15 pt-8 text-sm text-black/45">
+        Loading conversations...
+      </p>
+    );
+  }
+
   if (conversations.length === 0) {
     return (
       <div className="border-t border-black/15 pt-8">
@@ -113,16 +120,72 @@ export default function ConversationList() {
           <Link
             key={conversation.id}
             href={`/account/messages/${conversation.id}`}
-            className="grid gap-4 border-b border-black/15 py-8 transition hover:pl-2 md:grid-cols-[1fr_auto]"
+            className={`
+              grid
+              gap-4
+              border-b
+              py-8
+              transition
+              hover:pl-2
+              md:grid-cols-[1fr_auto]
+              ${
+                conversation.unread_count > 0
+                  ? "border-[#9b1c1c]/30 bg-[#9b1c1c]/[0.035] px-3"
+                  : "border-black/15"
+              }
+              `}
           >
             <div>
               <div className="flex flex-wrap items-center gap-3">
-                <h2 className="font-serif text-2xl font-light">
+                <h2
+                  className={`
+                    font-serif
+                    text-2xl
+
+                    ${
+                      conversation.unread_count > 0
+                        ? "font-semibold text-black"
+                        : "font-light text-black/80"
+                    }
+                  `}
+                >
                   {conversation.subject}
                 </h2>
 
                 <span className="text-[10px] uppercase tracking-[0.2em] text-[#9b1c1c]">
-                  {conversation.status}
+                  {conversation.unread_count > 0 && (
+                    <span
+                      className="
+                        inline-flex
+                        items-center
+                        gap-2
+                        rounded-full
+                        bg-[#9b1c1c]
+                        px-3
+                        py-1
+                        text-[10px]
+                        font-semibold
+                        uppercase
+                        tracking-[0.18em]
+                        text-white
+                        shadow-[0_3px_12px_rgba(155,28,28,0.18)]
+                      "
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="
+                          h-1.5
+                          w-1.5
+                          rounded-full
+                          bg-white
+                        "
+                      />
+
+                      {conversation.unread_count > 99
+                        ? "99+ new"
+                        : `${conversation.unread_count} new`}
+                    </span>
+                  )}
                 </span>
               </div>
 

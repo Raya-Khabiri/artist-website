@@ -1,31 +1,25 @@
-from rest_framework import generics
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from django.db.models import Count, Q
 
 from rest_framework import generics, status
 from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated,
 )
-
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Conversation
+from .models import Conversation, Message
 from .serializers import (
     ConversationCreateSerializer,
     ConversationSerializer,
     LoginSerializer,
-    RegisterSerializer,
     MessageCreateSerializer,
     MessageSerializer,
-    LoginSerializer,
     RegisterSerializer,
     UserSummarySerializer,
 )
-
-from django.shortcuts import get_object_or_404
 
 
 class RegisterAPIView(generics.CreateAPIView):
@@ -56,11 +50,28 @@ class LoginAPIView(APIView):
 
 class ConversationQuerysetMixin:
     def get_queryset(self):
-        queryset = Conversation.objects.select_related(
-            "customer",
-            "assigned_artist",
-        ).prefetch_related(
-            "messages__sender",
+        queryset = (
+            Conversation.objects.select_related(
+                "customer",
+                "assigned_artist",
+            )
+            .prefetch_related(
+                "messages__sender",
+            )
+            .annotate(
+                unread_count=Count(
+                    "messages",
+                    filter=(
+                        Q(messages__read_at__isnull=True)
+                        & ~Q(messages__sender=self.request.user)
+                    ),
+                    distinct=True,
+                )
+            )
+            .order_by(
+                "-unread_count",
+                "-updated_at",
+            )
         )
 
         if self.request.user.is_staff:
@@ -68,6 +79,33 @@ class ConversationQuerysetMixin:
 
         return queryset.filter(
             customer=self.request.user,
+        )
+
+
+class UnreadMessageCountAPIView(APIView):
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    def get(self, request):
+        unread_messages = Message.objects.filter(
+            read_at__isnull=True,
+        )
+
+        if request.user.is_staff:
+            unread_messages = unread_messages.filter(
+                sender__is_staff=False,
+            )
+        else:
+            unread_messages = unread_messages.filter(
+                conversation__customer=request.user,
+                sender__is_staff=True,
+            )
+
+        return Response(
+            {
+                "unread_count": unread_messages.count(),
+            }
         )
 
 
@@ -116,6 +154,24 @@ class ConversationDetailAPIView(
     permission_classes = [
         IsAuthenticated,
     ]
+
+    def retrieve(self, request, *args, **kwargs):
+        conversation = self.get_object()
+
+        Message.objects.filter(
+            conversation=conversation,
+            read_at__isnull=True,
+        ).exclude(
+            sender=request.user,
+        ).update(
+            read_at=timezone.now(),
+        )
+
+        serializer = self.get_serializer(
+            conversation,
+        )
+
+        return Response(serializer.data)
 
 
 class MessageCreateAPIView(

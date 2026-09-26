@@ -2,11 +2,21 @@
 
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/components/auth/AuthProvider";
 import { createConversation } from "@/lib/conversation-api";
 
-export default function ContactMessageForm() {
+type ContactMessageFormProps = {
+  redirectAfterSubmit?: boolean;
+  title?: string;
+};
+
+export default function ContactMessageForm({
+  redirectAfterSubmit = false,
+  title = "Send a private enquiry",
+}: ContactMessageFormProps) {
+  const router = useRouter();
   const { user, isLoading } = useAuth();
 
   const [subject, setSubject] = useState("");

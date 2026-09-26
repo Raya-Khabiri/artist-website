@@ -31,6 +31,7 @@ export type Conversation = {
   messages: ConversationMessage[];
   created_at: string;
   updated_at: string;
+  unread_count: number;
 };
 
 export type CreateConversationData = {
