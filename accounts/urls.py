@@ -7,6 +7,7 @@ from .views import (
     RegisterAPIView,
     MessageCreateAPIView,
     CurrentUserAPIView,
+    UnreadMessageCountAPIView,
 )
 
 app_name = "accounts"
@@ -27,6 +28,11 @@ urlpatterns = [
         "conversations/",
         ConversationListCreateAPIView.as_view(),
         name="conversation-list",
+    ),
+    path(
+        "messages/unread-count/",
+        UnreadMessageCountAPIView.as_view(),
+        name="unread-message-count",
     ),
     path(
         "conversations/<int:pk>/",

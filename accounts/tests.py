@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .models import Conversation
+from .models import Conversation, Message
 
 User = get_user_model()
 
@@ -241,66 +241,177 @@ class ConversationAPITests(APITestCase):
 
         self.assertEqual(response.status_code, 401)
 
+    def test_staff_unread_count_only_includes_customer_messages(self):
+        create_response = self.client.post(
+            "/api/accounts/conversations/",
+            {
+                "subject": "Unread notification",
+                "message": "A new customer message.",
+            },
+            format="json",
+        )
 
-def test_customer_details_are_only_visible_to_staff(self):
-    self.user.first_name = "Raya"
-    self.user.last_name = "Customer"
-    self.user.save(
-        update_fields=[
+        conversation_id = create_response.data["id"]
+
+        artist = User.objects.create_user(
+            username="notification-artist",
+            email="notification-artist@example.com",
+            password="StrongTestPass_2026!",
+            is_staff=True,
+        )
+
+        self.client.force_authenticate(
+            user=artist,
+        )
+
+        self.client.post(
+            f"/api/accounts/conversations/{conversation_id}/messages/",
+            {
+                "body": "Artist response",
+            },
+            format="json",
+        )
+
+        response = self.client.get(
+            "/api/accounts/messages/unread-count/",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+
+        self.assertEqual(
+            response.data["unread_count"],
+            1,
+        )
+
+    def test_opening_conversation_marks_other_users_messages_as_read(self):
+        create_response = self.client.post(
+            "/api/accounts/conversations/",
+            {
+                "subject": "Read notification",
+                "message": "Please read this message.",
+            },
+            format="json",
+        )
+
+        conversation_id = create_response.data["id"]
+
+        customer_message = Message.objects.get(
+            conversation_id=conversation_id,
+            sender=self.user,
+        )
+
+        self.assertIsNone(
+            customer_message.read_at,
+        )
+
+        artist = User.objects.create_user(
+            username="reading-artist",
+            email="reading-artist@example.com",
+            password="StrongTestPass_2026!",
+            is_staff=True,
+        )
+
+        self.client.force_authenticate(
+            user=artist,
+        )
+
+        response = self.client.get(
+            f"/api/accounts/conversations/{conversation_id}/",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+
+        customer_message.refresh_from_db()
+
+        self.assertIsNotNone(
+            customer_message.read_at,
+        )
+
+        unread_response = self.client.get(
+            "/api/accounts/messages/unread-count/",
+        )
+
+        self.assertEqual(
+            unread_response.data["unread_count"],
+            0,
+        )
+
+    def test_customer_details_are_only_visible_to_staff(self):
+        self.user.first_name = "Raya"
+        self.user.last_name = "Customer"
+        self.user.save(
+            update_fields=[
+                "first_name",
+                "last_name",
+            ]
+        )
+
+        create_response = self.client.post(
+            "/api/accounts/conversations/",
+            {
+                "subject": "Private customer details",
+                "message": "Please keep my details private.",
+            },
+            format="json",
+        )
+
+        conversation_id = create_response.data["id"]
+
+        customer_response = self.client.get(
+            f"/api/accounts/conversations/{conversation_id}/"
+        )
+
+        self.assertEqual(
+            customer_response.status_code,
+            200,
+        )
+        self.assertNotIn(
+            "email",
+            customer_response.data["customer"],
+        )
+        self.assertNotIn(
             "first_name",
+            customer_response.data["customer"],
+        )
+        self.assertNotIn(
             "last_name",
-        ]
-    )
+            customer_response.data["customer"],
+        )
 
-    create_response = self.client.post(
-        "/api/accounts/conversations/",
-        {
-            "subject": "Private customer details",
-            "message": "Please keep my details private.",
-        },
-        format="json",
-    )
+        artist = User.objects.create_user(
+            username="details-artist",
+            email="artist-details@example.com",
+            password="StrongTestPass_2026!",
+            is_staff=True,
+        )
 
-    conversation_id = create_response.data["id"]
+        self.client.force_authenticate(
+            user=artist,
+        )
 
-    customer_response = self.client.get(
-        f"/api/accounts/conversations/{conversation_id}/"
-    )
+        artist_response = self.client.get(
+            f"/api/accounts/conversations/{conversation_id}/"
+        )
 
-    self.assertEqual(customer_response.status_code, 200)
-    self.assertNotIn(
-        "email",
-        customer_response.data["customer"],
-    )
-    self.assertNotIn(
-        "first_name",
-        customer_response.data["customer"],
-    )
-    self.assertNotIn(
-        "last_name",
-        customer_response.data["customer"],
-    )
-
-    artist = get_user_model().objects.create_user(
-        username="details-artist",
-        email="artist-details@example.com",
-        password="StrongTestPass_2026!",
-        is_staff=True,
-    )
-    self.client.force_authenticate(user=artist)
-
-    artist_response = self.client.get(f"/api/accounts/conversations/{conversation_id}/")
-
-    self.assertEqual(artist_response.status_code, 200)
-    self.assertEqual(
-        artist_response.data["customer"]["first_name"],
-        "Raya",
-    )
-    self.assertEqual(
-        artist_response.data["customer"]["last_name"],
-        "Customer",
-    )
-    self.assertEqual(
-        artist_response.data["customer"]["email"],
-        self.user.email,
-    )
+        self.assertEqual(
+            artist_response.status_code,
+            200,
+        )
+        self.assertEqual(
+            artist_response.data["customer"]["first_name"],
+            "Raya",
+        )
+        self.assertEqual(
+            artist_response.data["customer"]["last_name"],
+            "Customer",
+        )
+        self.assertEqual(
+            artist_response.data["customer"]["email"],
+            self.user.email,
+        )
