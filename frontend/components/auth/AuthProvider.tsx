@@ -14,7 +14,7 @@ import type { AuthUser, LoginCredentials } from "@/types/auth";
 type AuthContextValue = {
   user: AuthUser | null;
   isLoading: boolean;
-  login: (credentials: LoginCredentials) => Promise<void>;
+  login: (credentials: LoginCredentials) => Promise<AuthUser>;
   logout: () => Promise<void>;
 };
 
@@ -50,9 +50,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  async function login(credentials: LoginCredentials) {
+  async function login(credentials: LoginCredentials): Promise<AuthUser> {
     const session = await loginUser(credentials);
+
     setUser(session.user);
+
+    return session.user;
   }
 
   async function logout() {

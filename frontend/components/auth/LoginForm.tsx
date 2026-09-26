@@ -24,12 +24,14 @@ export default function LoginForm({ redirectTo = "/" }: LoginFormProps) {
     setIsSubmitting(true);
 
     try {
-      await login({
+      const signedInUser = await login({
         email: email.trim(),
         password,
       });
 
-      router.replace(redirectTo);
+      const destination = signedInUser.is_staff ? "/studio" : redirectTo;
+
+      router.replace(destination);
       router.refresh();
     } catch (error) {
       setError(

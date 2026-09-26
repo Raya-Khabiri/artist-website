@@ -13,7 +13,7 @@ const legalLinks = [
   { label: "Privacy", href: "/privacy" },
   { label: "Terms", href: "/terms" },
   {
-    label: "Shipping & Returns",
+    label: "Shipping",
     href: "/shipping-returns",
   },
 ];
