@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.db.models import Count, Q
 
 from rest_framework import generics, status
 from rest_framework.permissions import (
@@ -49,11 +50,28 @@ class LoginAPIView(APIView):
 
 class ConversationQuerysetMixin:
     def get_queryset(self):
-        queryset = Conversation.objects.select_related(
-            "customer",
-            "assigned_artist",
-        ).prefetch_related(
-            "messages__sender",
+        queryset = (
+            Conversation.objects.select_related(
+                "customer",
+                "assigned_artist",
+            )
+            .prefetch_related(
+                "messages__sender",
+            )
+            .annotate(
+                unread_count=Count(
+                    "messages",
+                    filter=(
+                        Q(messages__read_at__isnull=True)
+                        & ~Q(messages__sender=self.request.user)
+                    ),
+                    distinct=True,
+                )
+            )
+            .order_by(
+                "-unread_count",
+                "-updated_at",
+            )
         )
 
         if self.request.user.is_staff:

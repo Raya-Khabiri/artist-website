@@ -211,6 +211,8 @@ class ConversationSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
+    unread_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Conversation
 
@@ -221,11 +223,19 @@ class ConversationSerializer(serializers.ModelSerializer):
             "customer",
             "assigned_artist",
             "messages",
+            "unread_count",
             "created_at",
             "updated_at",
         )
 
         read_only_fields = fields
+
+    def get_unread_count(self, obj):
+        return getattr(
+            obj,
+            "unread_count",
+            0,
+        )
 
     def get_customer(self, obj):
         request = self.context.get("request")
