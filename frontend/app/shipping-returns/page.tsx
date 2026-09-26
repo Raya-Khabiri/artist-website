@@ -5,9 +5,9 @@ import Navbar from "@/components/layout/Navbar";
 import Container from "@/components/ui/Container";
 
 export const metadata: Metadata = {
-  title: "Shipping & Returns | EAMORA",
+  title: "Shipping | EAMORA",
   description:
-    "Shipping, delivery and returns information for EAMORA artworks and prints.",
+    "Shipping and delivery information for EAMORA artworks and prints.",
 };
 
 export default function ShippingReturnsPage() {
@@ -23,7 +23,7 @@ export default function ShippingReturnsPage() {
             </p>
 
             <h1 className="mt-6 font-serif text-5xl font-light md:text-7xl">
-              Shipping & Returns
+              Shipping
             </h1>
 
             <div className="mt-14 space-y-7 text-justify text-[17px] leading-[1.55] text-black/65">
@@ -73,24 +73,13 @@ export default function ShippingReturnsPage() {
               </section>
 
               <section>
-                <h2 className="font-serif text-2xl text-black">Returns</h2>
-
-                <p className="mt-2">
-                  Return eligibility and costs depend on the product,
-                  destination and applicable consumer law. Custom-made or
-                  commissioned works may not be returnable unless damaged or
-                  defective.
-                </p>
-              </section>
-
-              <section>
                 <h2 className="font-serif text-2xl text-black">
                   Important notice
                 </h2>
 
                 <p className="mt-2">
                   This page contains temporary launch information. Final
-                  shipping and return terms must be confirmed before online
+                  shipping and delivery terms must be confirmed before online
                   payments are enabled.
                 </p>
               </section>
