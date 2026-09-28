@@ -37,6 +37,12 @@ export default function ContactMessageForm({
         message: message.trim(),
       });
 
+      if (redirectAfterSubmit) {
+        router.push(`/account/messages/${conversation.id}`);
+        router.refresh();
+        return;
+      }
+
       setConversationId(conversation.id);
       setSubject("");
       setMessage("");
@@ -60,7 +66,7 @@ export default function ContactMessageForm({
   if (!user) {
     return (
       <div className="border-t border-black/15 pt-8">
-        <p className="font-serif text-2xl font-light">Send a private enquiry</p>
+        <p className="font-serif text-2xl font-light">{title}</p>
 
         <p className="mt-5 max-w-md leading-7 text-black/60">
           Sign in or create an account to send a message and continue your
@@ -92,7 +98,7 @@ export default function ContactMessageForm({
   return (
     <form onSubmit={handleSubmit} className="border-t border-black/15 pt-8">
       <div className="mb-8">
-        <p className="font-serif text-2xl font-light">Send a private enquiry</p>
+        <p className="font-serif text-2xl font-light">{title}</p>
 
         <p className="mt-3 text-sm text-black/50">
           Signed in as {user.full_name || "EAMORA customer"}
@@ -147,7 +153,13 @@ export default function ContactMessageForm({
           role="status"
           className="mt-6 border-l-2 border-[#9b1c1c] pl-4 text-sm leading-6 text-black/65"
         >
-          Your message was sent successfully. Conversation #{conversationId}
+          Your message was sent successfully.{" "}
+          <Link
+            href={`/account/messages/${conversationId}`}
+            className="underline underline-offset-4 hover:text-[#9b1c1c]"
+          >
+            View conversation
+          </Link>
         </div>
       )}
 

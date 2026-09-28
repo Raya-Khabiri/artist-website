@@ -59,23 +59,29 @@ export default function CartProvider({ children }: { children: ReactNode }) {
   const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
-    try {
-      const storedCart = window.localStorage.getItem(STORAGE_KEY);
+    const loadTimer = window.setTimeout(() => {
+      try {
+        const storedCart = window.localStorage.getItem(STORAGE_KEY);
 
-      if (storedCart) {
-        const parsedCart: unknown = JSON.parse(storedCart);
+        if (storedCart) {
+          const parsedCart: unknown = JSON.parse(storedCart);
 
-        if (Array.isArray(parsedCart)) {
-          setItems(parsedCart.filter(isCartItem));
+          if (Array.isArray(parsedCart)) {
+            setItems(parsedCart.filter(isCartItem));
+          }
         }
-      }
-    } catch (error) {
-      console.error("Unable to restore cart:", error);
+      } catch (error) {
+        console.error("Unable to restore cart:", error);
 
-      window.localStorage.removeItem(STORAGE_KEY);
-    } finally {
-      setHasLoaded(true);
-    }
+        window.localStorage.removeItem(STORAGE_KEY);
+      } finally {
+        setHasLoaded(true);
+      }
+    }, 0);
+
+    return () => {
+      window.clearTimeout(loadTimer);
+    };
   }, []);
 
   useEffect(() => {
