@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-
+import { createPageMetadata } from "@/lib/metadata";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ArtworkLightbox from "@/components/artwork/ArtworkLightbox";
@@ -33,28 +33,34 @@ export async function generateMetadata({
   params,
 }: ArtworkPageProps): Promise<Metadata> {
   const { slug } = await params;
+
   const artwork = await getArtworkBySlug(slug);
 
   if (!artwork) {
-    return {
-      title: "Artwork not found | EAMORA",
-    };
+    return createPageMetadata({
+      title: "Artwork Not Found",
+      description: "The requested EAMORA artwork could not be found.",
+      path: `/gallery/${slug}`,
+      noIndex: true,
+    });
   }
 
   const image = getMediaUrl(artwork.main_image);
 
-  return {
-    title: `${artwork.title} | EAMORA`,
-    description:
-      artwork.short_description ||
-      artwork.description ||
-      `View ${artwork.title} by EAMORA.`,
-    openGraph: image
-      ? {
-          images: [{ url: image }],
-        }
-      : undefined,
-  };
+  const rawDescription =
+    artwork.short_description ||
+    artwork.description ||
+    `View ${artwork.title}, an original artwork by EAMORA.`;
+
+  const description = rawDescription.replace(/\s+/g, " ").trim().slice(0, 160);
+
+  return createPageMetadata({
+    title: artwork.title,
+    description,
+    path: `/gallery/${artwork.slug}`,
+    image,
+    imageAlt: artwork.main_image_alt || artwork.title,
+  });
 }
 
 export default async function ArtworkPage({ params }: ArtworkPageProps) {

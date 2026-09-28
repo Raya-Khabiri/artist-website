@@ -1,15 +1,17 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/metadata";
 
 import RegisterForm from "@/components/auth/RegisterForm";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import Container from "@/components/ui/Container";
 
-export const metadata: Metadata = {
-  title: "Create Account | EAMORA",
+export const metadata = createPageMetadata({
+  title: "Create Account",
   description:
-    "Create an EAMORA account for enquiries, conversations and future orders.",
-};
+    "Create an EAMORA account to contact the artist, manage conversations and purchase artworks.",
+  path: "/register",
+  noIndex: true,
+});
 
 export default function RegisterPage() {
   return (

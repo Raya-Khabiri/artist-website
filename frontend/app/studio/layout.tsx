@@ -1,6 +1,18 @@
+import type { Metadata } from "next";
+
 import type { ReactNode } from "react";
 
 import StudioGuard from "@/components/studio/StudioGuard";
+
+export const metadata: Metadata = {
+  title: "Artist Studio",
+  description: "Private EAMORA artist management area.",
+  robots: {
+    index: false,
+    follow: false,
+    noarchive: true,
+  },
+};
 
 type StudioLayoutProps = {
   children: ReactNode;

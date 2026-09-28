@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/metadata";
 
 import ArtworkCard from "@/components/artwork/ArtworkCard";
 import GallerySort from "@/components/artwork/GallerySort";
@@ -10,11 +10,12 @@ import SectionTitle from "@/components/ui/SectionTitle";
 import { getArtworks, getTechniques } from "@/lib/api";
 import type { Artwork, Technique } from "@/types/artwork";
 
-export const metadata: Metadata = {
-  title: "Gallery | EAMORA",
+export const metadata = createPageMetadata({
+  title: "Gallery",
   description:
-    "Explore original artworks and selected works from the EAMORA collection.",
-};
+    "Explore original artworks, paintings and selected works from the EAMORA collection.",
+  path: "/gallery",
+});
 
 type GalleryPageProps = {
   searchParams: Promise<{
