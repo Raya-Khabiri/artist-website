@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/metadata";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import CartView from "@/components/cart/CartView";
@@ -6,10 +6,12 @@ import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import Container from "@/components/ui/Container";
 
-export const metadata: Metadata = {
-  title: "Basket | EAMORA",
-  description: "Review the artworks selected for purchase.",
-};
+export const metadata = createPageMetadata({
+  title: "Basket",
+  description: "Review the artworks selected for purchase from EAMORA.",
+  path: "/cart",
+  noIndex: true,
+});
 
 export default async function CartPage() {
   const cookieStore = await cookies();

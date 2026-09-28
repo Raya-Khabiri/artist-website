@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/metadata";
 
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import Container from "@/components/ui/Container";
 
-export const metadata: Metadata = {
-  title: "Terms & Conditions | EAMORA",
+export const metadata = createPageMetadata({
+  title: "Terms & Conditions",
   description:
-    "Terms and conditions for using the EAMORA website and purchasing artwork.",
-};
+    "Read the terms and conditions governing use of the EAMORA website and the purchase of original artworks and prints.",
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/metadata";
 import Image from "next/image";
 
 import Footer from "@/components/layout/Footer";
@@ -6,10 +6,12 @@ import Navbar from "@/components/layout/Navbar";
 import Container from "@/components/ui/Container";
 import { getMediaUrl, getSiteSettings } from "@/lib/api";
 
-export const metadata: Metadata = {
-  title: "About | EAMORA",
-  description: "Learn about the artist and the ideas behind EAMORA.",
-};
+export const metadata = createPageMetadata({
+  title: "About the Artist",
+  description:
+    "Discover the artist behind EAMORA, their background, creative practice and the ideas shaping their contemporary artworks.",
+  path: "/about",
+});
 
 export default async function AboutPage() {
   const settings = await getSiteSettings();

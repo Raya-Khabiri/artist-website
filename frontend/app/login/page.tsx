@@ -1,15 +1,17 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/metadata";
 
 import LoginForm from "@/components/auth/LoginForm";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import Container from "@/components/ui/Container";
 
-export const metadata: Metadata = {
-  title: "Sign In | EAMORA",
+export const metadata = createPageMetadata({
+  title: "Sign In",
   description:
-    "Sign in to your EAMORA account to manage enquiries and future orders.",
-};
+    "Sign in to your EAMORA account to manage conversations, enquiries and orders.",
+  path: "/login",
+  noIndex: true,
+});
 
 type LoginPageProps = {
   searchParams: Promise<{

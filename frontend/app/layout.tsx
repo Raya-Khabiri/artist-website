@@ -7,7 +7,9 @@ import AuthProvider from "@/components/auth/AuthProvider";
 
 import CartProvider from "@/components/cart/CartProvider";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const siteUrl = (
+  process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+).replace(/\/$/, "");
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -19,6 +21,10 @@ export const metadata: Metadata = {
 
   description:
     "Explore EAMORA's original artworks, selected collections and prints. Art preserving memory, emotion and fleeting moments.",
+
+  alternates: {
+    canonical: "/",
+  },
 
   applicationName: "EAMORA",
 

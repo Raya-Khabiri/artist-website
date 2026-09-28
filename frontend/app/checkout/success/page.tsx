@@ -6,7 +6,8 @@ import Navbar from "@/components/layout/Navbar";
 import Container from "@/components/ui/Container";
 
 export const metadata: Metadata = {
-  title: "Order received | EAMORA",
+  title: "Order Received",
+  description: "Confirmation of your EAMORA order enquiry.",
 };
 
 type CheckoutSuccessPageProps = {

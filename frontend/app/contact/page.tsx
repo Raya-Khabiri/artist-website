@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/metadata";
 
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
@@ -6,10 +6,12 @@ import Container from "@/components/ui/Container";
 import { getSiteSettings } from "@/lib/api";
 import ContactMessageForm from "@/components/contact/ContactMessageForm";
 
-export const metadata: Metadata = {
-  title: "Contact | EAMORA",
-  description: "Contact EAMORA about artworks, prints and enquiries.",
-};
+export const metadata = createPageMetadata({
+  title: "Contact",
+  description:
+    "Contact EAMORA to enquire about original artworks, availability, prints, shipping and purchasing information.",
+  path: "/contact",
+});
 
 export default async function ContactPage() {
   const settings = await getSiteSettings();

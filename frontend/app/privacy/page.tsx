@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/metadata";
 
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import Container from "@/components/ui/Container";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy | EAMORA",
+export const metadata = createPageMetadata({
+  title: "Privacy Policy",
   description:
-    "Information about how EAMORA collects, uses and protects personal information.",
-};
+    "Read the EAMORA privacy policy explaining how personal information is collected, used, stored and protected.",
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (

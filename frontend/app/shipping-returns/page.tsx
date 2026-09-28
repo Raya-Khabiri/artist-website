@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
+import { createPageMetadata } from "@/lib/metadata";
 
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
 import Container from "@/components/ui/Container";
 
-export const metadata: Metadata = {
-  title: "Shipping | EAMORA",
+export const metadata = createPageMetadata({
+  title: "Shipping",
   description:
-    "Shipping and delivery information for EAMORA artworks and prints.",
-};
+    "Review shipping, packaging, delivery and international customs information for EAMORA artworks and prints.",
+  path: "/shipping-returns",
+});
 
 export default function ShippingReturnsPage() {
   return (

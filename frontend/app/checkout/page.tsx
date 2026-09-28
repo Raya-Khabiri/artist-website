@@ -6,7 +6,7 @@ import Navbar from "@/components/layout/Navbar";
 import Container from "@/components/ui/Container";
 
 export const metadata: Metadata = {
-  title: "Checkout | EAMORA",
+  title: "Checkout",
   description: "Complete the delivery details for your EAMORA order.",
 };
 
