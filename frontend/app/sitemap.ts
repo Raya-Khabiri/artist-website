@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 
-import { getArtworks } from "@/lib/api";
+import {
+  getArtworks,
+  getMediaUrl,
+} from "@/lib/api";
 
 export const dynamic = "force-dynamic";
 
@@ -53,14 +56,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const artworkPages: MetadataRoute.Sitemap =
-    artworks.map((artwork) => ({
-      url: `${SITE_URL}/gallery/${artwork.slug}`,
-      lastModified: new Date(
-        artwork.updated_at,
-      ),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    }));
+    artworks.map((artwork) => {
+      const mainImage = getMediaUrl(
+        artwork.main_image,
+      );
+
+      return {
+        url: `${SITE_URL}/gallery/${artwork.slug}`,
+        lastModified: new Date(
+          artwork.updated_at,
+        ),
+        changeFrequency: "monthly",
+        priority: 0.8,
+        images: mainImage
+          ? [mainImage]
+          : undefined,
+      };
+    });
 
   return [
     ...staticPages,
