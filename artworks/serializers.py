@@ -108,6 +108,39 @@ class ArtworkManagementSerializer(serializers.ModelSerializer):
             "updated_at",
         )
 
+    def validate(self, attrs):
+        instance = self.instance
+
+        is_published = attrs.get(
+            "is_published",
+            getattr(
+                instance,
+                "is_published",
+                False,
+            ),
+        )
+
+        main_image_alt = attrs.get(
+            "main_image_alt",
+            getattr(
+                instance,
+                "main_image_alt",
+                "",
+            ),
+        )
+
+        if is_published and not main_image_alt.strip():
+            raise serializers.ValidationError(
+                {
+                    "main_image_alt": (
+                        "Add descriptive image alt text "
+                        "before publishing this artwork."
+                    ),
+                }
+            )
+
+        return attrs
+
     def get_or_create_technique(self, name):
         normalised_name = " ".join(name.strip().split())
 

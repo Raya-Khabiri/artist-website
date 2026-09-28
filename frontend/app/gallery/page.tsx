@@ -75,6 +75,7 @@ export default async function GalleryPage({ searchParams }: GalleryPageProps) {
               eyebrow="The collection"
               title="Gallery"
               description="A collection of works exploring emotion, memory and the quiet traces left by time."
+              headingLevel={1}
             />
 
             <TechniqueFilter

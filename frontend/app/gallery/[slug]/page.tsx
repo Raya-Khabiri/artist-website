@@ -123,27 +123,66 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
 
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "VisualArtwork",
-    name: artwork.title,
-    description: artwork.short_description || artwork.description || undefined,
-    image: lightboxImages.map((image) => image.src),
-    url: artworkUrl,
-    artMedium: artwork.medium || undefined,
-    dateCreated: artwork.year?.toString() || undefined,
-    width: artwork.size || undefined,
-    artform: "Painting",
-    offers:
-      artwork.show_price && artwork.original_price
-        ? {
-            "@type": "Offer",
-            price: artwork.original_price,
-            priceCurrency: artwork.currency,
-            availability: originalAvailable
-              ? "https://schema.org/InStock"
-              : "https://schema.org/OutOfStock",
-            url: artworkUrl,
-          }
-        : undefined,
+    "@graph": [
+      {
+        "@type": "VisualArtwork",
+        "@id": `${artworkUrl}#artwork`,
+        name: artwork.title,
+        description:
+          artwork.short_description || artwork.description || undefined,
+        image: lightboxImages.map((image) => image.src),
+        url: artworkUrl,
+        artMedium: artwork.technique?.name || artwork.medium || undefined,
+        dateCreated: artwork.year?.toString() || undefined,
+        width: artwork.size || undefined,
+        artform: "Painting",
+        creator: {
+          "@type": "Person",
+          "@id": `${siteUrl}/#artist`,
+          name: "EAMORA",
+          url: `${siteUrl}/about`,
+        },
+        offers:
+          artwork.show_price && artwork.original_price
+            ? {
+                "@type": "Offer",
+                price: artwork.original_price,
+                priceCurrency: artwork.currency,
+                availability: originalAvailable
+                  ? "https://schema.org/InStock"
+                  : "https://schema.org/OutOfStock",
+                url: artworkUrl,
+                seller: {
+                  "@id": `${siteUrl}/#artist`,
+                },
+              }
+            : undefined,
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${artworkUrl}#breadcrumb`,
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: siteUrl,
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Gallery",
+            item: `${siteUrl}/gallery`,
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: artwork.title,
+            item: artworkUrl,
+          },
+        ],
+      },
+    ],
   };
 
   return (

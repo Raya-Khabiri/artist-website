@@ -169,6 +169,73 @@ class PublicArtworkAPITests(APITestCase):
 
 
 class ArtworkManagementAPITests(APITestCase):
+    def test_staff_must_add_alt_text_before_publishing(
+        self,
+    ):
+        artwork = Artwork.objects.create(
+            title="SEO draft artwork",
+            main_image=("artworks/main/" "seo-draft-artwork.jpg"),
+            main_image_alt="",
+            is_published=False,
+            currency="GBP",
+        )
+
+        self.client.force_authenticate(
+            user=self.staff_user,
+        )
+
+        detail_url = reverse(
+            "artwork-management-detail",
+            kwargs={
+                "pk": artwork.pk,
+            },
+        )
+
+        rejected_response = self.client.patch(
+            detail_url,
+            {
+                "is_published": True,
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            rejected_response.status_code,
+            400,
+            rejected_response.data,
+        )
+
+        self.assertIn(
+            "main_image_alt",
+            rejected_response.data,
+        )
+
+        accepted_response = self.client.patch(
+            detail_url,
+            {
+                "is_published": True,
+                "main_image_alt": ("Abstract contemporary artwork " "by EAMORA"),
+            },
+            format="json",
+        )
+
+        self.assertEqual(
+            accepted_response.status_code,
+            200,
+            accepted_response.data,
+        )
+
+        artwork.refresh_from_db()
+
+        self.assertTrue(
+            artwork.is_published,
+        )
+
+        self.assertEqual(
+            artwork.main_image_alt,
+            ("Abstract contemporary artwork " "by EAMORA"),
+        )
+
     def setUp(self):
         user_model = get_user_model()
 
