@@ -75,7 +75,7 @@ export default function Navbar() {
       isActive = false;
       window.clearInterval(intervalId);
     };
-  }, [user?.id]);
+  }, [user]);
 
   async function handleLogout() {
     setIsSigningOut(true);
