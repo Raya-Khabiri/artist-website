@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+
 import { useState, type FormEvent } from "react";
 
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -36,11 +36,9 @@ function formatPrice(value: number, currency: string) {
 }
 
 export default function CheckoutForm() {
-  const router = useRouter();
-
   const { user, isLoading: isAuthLoading } = useAuth();
 
-  const { items, total, currency, clearCart } = useCart();
+  const { items, total, currency } = useCart();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -103,7 +101,7 @@ export default function CheckoutForm() {
     const formData = new FormData(event.currentTarget);
 
     try {
-      const order = await createCheckoutOrder({
+      const checkout = await createCheckoutOrder({
         items: items.map((item) => ({
           artwork_id: item.artworkId,
           product_type: item.productType,
@@ -125,11 +123,16 @@ export default function CheckoutForm() {
         note: String(formData.get("note") || ""),
       });
 
-      clearCart();
+      const checkoutUrl = new URL(checkout.checkout_url);
 
-      router.push(
-        `/checkout/success?reference=${encodeURIComponent(order.reference)}`,
-      );
+      if (
+        checkoutUrl.protocol !== "https:" ||
+        checkoutUrl.hostname !== "checkout.stripe.com"
+      ) {
+        throw new Error("The payment provider returned an invalid URL.");
+      }
+
+      window.location.assign(checkoutUrl.toString());
     } catch (submitError) {
       setError(
         submitError instanceof Error
@@ -248,7 +251,7 @@ export default function CheckoutForm() {
           disabled={isSubmitting}
           className="border border-[#171717] bg-[#171717] px-8 py-4 text-xs uppercase tracking-[0.22em] text-[#faf9f6] transition hover:bg-[#9b1c1c] disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {isSubmitting ? "Creating order..." : "Place order"}
+          {isSubmitting ? "Redirecting..." : "Continue to secure payment"}
         </button>
       </form>
 
@@ -292,8 +295,7 @@ export default function CheckoutForm() {
         </div>
 
         <p className="mt-6 text-xs leading-6 text-black/45">
-          Payment integration will be added in the next step. This currently
-          creates a pending order securely.
+          You will be redirected to Stripe to complete your payment securely.
         </p>
       </aside>
     </div>

@@ -2,6 +2,7 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -169,9 +170,9 @@ export default function CartProvider({ children }: { children: ReactNode }) {
     );
   }
 
-  function clearCart() {
+  const clearCart = useCallback(() => {
     setItems([]);
-  }
+  }, []);
 
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
 
@@ -194,7 +195,7 @@ export default function CartProvider({ children }: { children: ReactNode }) {
       removeItem,
       clearCart,
     }),
-    [items, itemCount, total, currency],
+    [items, itemCount, total, currency, clearCart],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
