@@ -6,6 +6,8 @@ from artworks.models import Artwork
 
 from .models import Order, OrderItem
 
+from unittest.mock import Mock, patch
+
 
 class OrderManagementAPITests(
     APITestCase,
@@ -265,9 +267,17 @@ class CheckoutAPITests(APITestCase):
             0,
         )
 
+    @patch("orders.views.create_checkout_session")
     def test_authenticated_user_can_order_original(
         self,
+        create_checkout_session_mock,
     ):
+        checkout_session = Mock()
+        checkout_session.id = "cs_test_original"
+        checkout_session.url = "https://checkout.stripe.com/test"
+
+        create_checkout_session_mock.return_value = checkout_session
+
         artwork = self.create_artwork()
 
         self.client.force_authenticate(
@@ -284,6 +294,11 @@ class CheckoutAPITests(APITestCase):
             response.status_code,
             201,
             response.data,
+        )
+
+        self.assertEqual(
+            response.data["checkout_url"],
+            "https://checkout.stripe.com/test",
         )
 
         order = Order.objects.get()
@@ -353,9 +368,17 @@ class CheckoutAPITests(APITestCase):
             artwork.original_available,
         )
 
+    @patch("orders.views.create_checkout_session")
     def test_print_order_uses_server_price_and_stock(
         self,
+        create_checkout_session_mock,
     ):
+        checkout_session = Mock()
+        checkout_session.id = "cs_test_print"
+        checkout_session.url = "https://checkout.stripe.com/test"
+
+        create_checkout_session_mock.return_value = checkout_session
+
         artwork = self.create_artwork(
             title="Available print",
             original_available=False,
@@ -385,6 +408,11 @@ class CheckoutAPITests(APITestCase):
             response.data,
         )
 
+        self.assertEqual(
+            response.data["checkout_url"],
+            "https://checkout.stripe.com/test",
+        )
+
         order = Order.objects.get()
 
         self.assertEqual(
@@ -409,4 +437,148 @@ class CheckoutAPITests(APITestCase):
         self.assertEqual(
             artwork.stock,
             3,
+        )
+
+    @patch("orders.views.retrieve_checkout_session")
+    def test_customer_can_confirm_paid_checkout(
+        self,
+        retrieve_session_mock,
+    ):
+        artwork = self.create_artwork()
+
+        order = Order.objects.create(
+            customer=self.customer,
+            customer_name="Checkout Customer",
+            customer_email=self.customer.email,
+            address="10 Test Street",
+            status="pending",
+            total_price="750.00",
+            currency="GBP",
+            stripe_checkout_session_id=("cs_test_paid"),
+        )
+
+        OrderItem.objects.create(
+            order=order,
+            artwork=artwork,
+            product_type="original",
+            quantity=1,
+            unit_price="750.00",
+        )
+
+        retrieve_session_mock.return_value = {
+            "id": "cs_test_paid",
+            "payment_status": "paid",
+            "amount_total": 75000,
+            "currency": "gbp",
+            "payment_intent": "pi_test_paid",
+            "metadata": {
+                "order_id": str(order.pk),
+            },
+        }
+
+        self.client.force_authenticate(
+            user=self.customer,
+        )
+
+        response = self.client.get(
+            reverse(
+                "checkout-confirm",
+            ),
+            {
+                "session_id": ("cs_test_paid"),
+            },
+        )
+
+        self.assertEqual(
+            response.status_code,
+            200,
+            response.data,
+        )
+
+        self.assertEqual(
+            response.data["payment_status"],
+            "paid",
+        )
+
+        order.refresh_from_db()
+
+        self.assertEqual(
+            order.status,
+            "paid",
+        )
+
+        self.assertEqual(
+            order.stripe_payment_intent_id,
+            "pi_test_paid",
+        )
+
+        self.assertIsNotNone(
+            order.paid_at,
+        )
+
+    @patch("orders.views.retrieve_checkout_session")
+    def test_checkout_confirmation_rejects_wrong_amount(
+        self,
+        retrieve_session_mock,
+    ):
+        artwork = self.create_artwork()
+
+        order = Order.objects.create(
+            customer=self.customer,
+            customer_name="Checkout Customer",
+            customer_email=self.customer.email,
+            address="10 Test Street",
+            status="pending",
+            total_price="750.00",
+            currency="GBP",
+            stripe_checkout_session_id=("cs_test_wrong_amount"),
+        )
+
+        OrderItem.objects.create(
+            order=order,
+            artwork=artwork,
+            product_type="original",
+            quantity=1,
+            unit_price="750.00",
+        )
+
+        retrieve_session_mock.return_value = {
+            "id": "cs_test_wrong_amount",
+            "payment_status": "paid",
+            "amount_total": 100,
+            "currency": "gbp",
+            "payment_intent": ("pi_test_wrong_amount"),
+            "metadata": {
+                "order_id": str(order.pk),
+            },
+        }
+
+        self.client.force_authenticate(
+            user=self.customer,
+        )
+
+        response = self.client.get(
+            reverse(
+                "checkout-confirm",
+            ),
+            {
+                "session_id": ("cs_test_wrong_amount"),
+            },
+        )
+
+        self.assertEqual(
+            response.status_code,
+            400,
+            response.data,
+        )
+
+        order.refresh_from_db()
+
+        self.assertEqual(
+            order.status,
+            "pending",
+        )
+
+        self.assertIsNone(
+            order.paid_at,
         )

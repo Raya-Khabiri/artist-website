@@ -81,6 +81,24 @@ class Order(models.Model):
         default="GBP",
     )
 
+    stripe_checkout_session_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        unique=True,
+    )
+
+    stripe_payment_intent_id = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+    )
+
+    paid_at = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     updated_at = models.DateTimeField(
