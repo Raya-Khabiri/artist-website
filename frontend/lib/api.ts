@@ -168,6 +168,24 @@ export async function getTechniques(): Promise<Technique[]> {
   return data.results ?? [];
 }
 
+// export function getMediaUrl(
+//   path: string | null | undefined,
+// ): string | null {
+//   if (!path) {
+//     return null;
+//   }
+
+//   if (
+//     path.startsWith("http://") ||
+//     path.startsWith("https://")
+//   ) {
+//     return path;
+//   }
+
+//   //return `${API_URL}${path.startsWith("/") ? path : `/${path}`}`;
+//   return path.startsWith("/") ? path : `/${path}`;
+// }
+
 export function getMediaUrl(
   path: string | null | undefined,
 ): string | null {
@@ -175,13 +193,19 @@ export function getMediaUrl(
     return null;
   }
 
-  if (
-    path.startsWith("http://") ||
-    path.startsWith("https://")
-  ) {
-    return path;
+  if (path.startsWith("http://") || path.startsWith("https://")) {
+    try {
+      const url = new URL(path);
+
+      if (url.pathname.startsWith("/media/")) {
+        return url.pathname;
+      }
+
+      return path;
+    } catch {
+      return path;
+    }
   }
 
-  //return `${API_URL}${path.startsWith("/") ? path : `/${path}`}`;
   return path.startsWith("/") ? path : `/${path}`;
 }
