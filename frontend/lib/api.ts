@@ -182,5 +182,6 @@ export function getMediaUrl(
     return path;
   }
 
-  return `${API_URL}${path.startsWith("/") ? path : `/${path}`}`;
+  //return `${API_URL}${path.startsWith("/") ? path : `/${path}`}`;
+  return path.startsWith("/") ? path : `/${path}`;
 }
