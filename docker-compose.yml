@@ -53,23 +53,23 @@ services:
       "
 
 
-    frontend:
-      build:
-        context: ./frontend
-        dockerfile: Dockerfile
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
 
-      restart: unless-stopped
+    restart: unless-stopped
 
-      depends_on:
-        - backend
+    depends_on:
+      - backend
 
-      ports:
-        - "3000:3000"
+    ports:
+      - "3000:3000"
 
-      environment:
-        NODE_ENV: production
-        NEXT_PUBLIC_API_URL: http://backend:8000
-        NEXT_PUBLIC_SITE_URL: http://YOUR_SERVER_IP
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: http://backend:8000
+      NEXT_PUBLIC_SITE_URL: http://YOUR_SERVER_IP
 
 
 volumes:
