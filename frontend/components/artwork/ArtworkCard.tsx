@@ -78,6 +78,7 @@ export default function ArtworkCard({
                 src={imageUrl}
                 alt={artwork.main_image_alt || artwork.title}
                 fill
+                unoptimized
                 sizes="
                   (max-width: 640px) 100vw,
                   (max-width: 1024px) 50vw,
