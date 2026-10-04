@@ -29,7 +29,7 @@ async function getErrorMessage(response: Response): Promise<string> {
 export async function loginUser(
   credentials: LoginCredentials,
 ): Promise<AuthSession> {
-  const response = await fetch("/api/auth/login", {
+  const response = await fetch("/api/accounts/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -47,7 +47,7 @@ export async function loginUser(
 export async function registerUser(
   userData: RegisterData,
 ): Promise<RegisterResponse> {
-  const response = await fetch("/api/auth/register", {
+  const response = await fetch("/api/accounts/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -63,7 +63,7 @@ export async function registerUser(
 }
 
 export async function logoutUser(): Promise<void> {
-  const response = await fetch("/api/auth/logout", {
+  const response = await fetch("/api/accounts/logout", {
     method: "POST",
   });
 
@@ -73,7 +73,7 @@ export async function logoutUser(): Promise<void> {
 }
 
 export async function getCurrentUser(): Promise<AuthUser | null> {
-  const response = await fetch("/api/auth/me", {
+  const response = await fetch("/api/accounts/me", {
     method: "GET",
     cache: "no-store",
   });
