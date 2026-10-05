@@ -83,7 +83,8 @@ export async function GET() {
 
   response.cookies.set("access_token", refreshedTokens.access, {
     httpOnly: true,
-    secure: isProduction,
+    // secure: isProduction,
+    secure: false,
     sameSite: "lax",
     path: "/",
     maxAge: 15 * 60,
@@ -92,7 +93,8 @@ export async function GET() {
   if (refreshedTokens.refresh) {
     response.cookies.set("refresh_token", refreshedTokens.refresh, {
       httpOnly: true,
-      secure: isProduction,
+      // secure: isProduction,
+      secure: false,
       sameSite: "lax",
       path: "/",
       maxAge: 7 * 24 * 60 * 60,
