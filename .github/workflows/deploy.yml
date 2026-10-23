@@ -26,14 +26,26 @@ jobs:
         run: |
           mkdir -p "$HOME/.ssh"
           chmod 700 "$HOME/.ssh"
+
           printf '%s\n' "$SSH_PRIVATE_KEY" > "$HOME/.ssh/deploy_key"
           chmod 600 "$HOME/.ssh/deploy_key"
+
           printf '%s\n' "$SSH_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/known_hosts"
 
       - name: Deploy to server
         env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SERVER_HOST }}
+          SSH_USER: ${{ secrets.SERVER_USER }}
         run: |
-          ssh -i "$HOME/.ssh/deploy_key" -o BatchMode=yes -o StrictHostKeyChecking=yes -p 22 "${SSH_USER}@${SSH_HOST}" "cd /var/www/artist-website && git pull --ff-only && docker compose up -d --build"
+          set -e
+
+          test -n "$SSH_HOST" || { echo "SERVER_HOST is missing"; exit 1; }
+          test -n "$SSH_USER" || { echo "SERVER_USER is missing"; exit 1; }
+
+          ssh -i "$HOME/.ssh/deploy_key" \
+            -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes \
+            -p 22 \
+            "${SSH_USER}@${SSH_HOST}" \
+            'cd /var/www/artist-website && git pull --ff-only && docker compose up -d --build'
