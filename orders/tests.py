@@ -236,6 +236,7 @@ class CheckoutAPITests(APITestCase):
                     "quantity": quantity,
                 },
             ],
+            "customer_email": "buyer@example.com",
             "customer_phone": "",
             "address_line_1": "10 Test Street",
             "address_line_2": "",
@@ -306,6 +307,11 @@ class CheckoutAPITests(APITestCase):
         self.assertEqual(
             order.customer,
             self.customer,
+        )
+
+        self.assertEqual(
+            order.customer_email,
+            "buyer@example.com",
         )
 
         self.assertEqual(
