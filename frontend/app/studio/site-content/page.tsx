@@ -1,6 +1,4 @@
 "use client";
-
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import SiteContentForm from "@/components/studio/SiteContentForm";
@@ -64,13 +62,6 @@ export default function StudioSiteContentPage() {
           <p className="text-sm text-[#9b1c1c]">
             {error || "Site content could not be loaded."}
           </p>
-
-          <Link
-            href="/studio"
-            className="mt-6 inline-block border-b border-black/20 pb-1 text-sm"
-          >
-            Return to studio
-          </Link>
         </div>
       </main>
     );
@@ -92,21 +83,7 @@ export default function StudioSiteContentPage() {
     >
       <div className="mx-auto max-w-4xl">
         <header className="border-b border-black/10 pb-10">
-          <Link
-            href="/studio"
-            className="
-              text-[9px]
-              uppercase
-              tracking-[0.28em]
-              text-black/40
-              transition
-              hover:text-[#9b1c1c]
-            "
-          >
-            Back to studio
-          </Link>
-
-          <p className="mt-10 text-[10px] uppercase tracking-[0.3em] text-[#9b1c1c]">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-[#9b1c1c]">
             Website management
           </p>
 

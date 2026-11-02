@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import OrderManager from "@/components/studio/OrderManager";
 
 export default function StudioOrdersPage() {
@@ -19,21 +17,7 @@ export default function StudioOrdersPage() {
     >
       <div className="mx-auto max-w-5xl">
         <header className="border-b border-black/10 pb-10">
-          <Link
-            href="/studio"
-            className="
-              text-[9px]
-              uppercase
-              tracking-[0.28em]
-              text-black/40
-              transition
-              hover:text-[#9b1c1c]
-            "
-          >
-            Back to studio
-          </Link>
-
-          <p className="mt-10 text-[10px] uppercase tracking-[0.3em] text-[#9b1c1c]">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-[#9b1c1c]">
             Sales management
           </p>
 

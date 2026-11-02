@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-
 import type { ReactNode } from "react";
 
 import StudioGuard from "@/components/studio/StudioGuard";

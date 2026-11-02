@@ -31,19 +31,19 @@ export default async function Footer() {
         text-[#171717]
       "
     >
-      <Container className="pb-8 pt-16 md:pb-10 md:pt-20">
+      <Container className="pb-6 pt-12 md:pb-8 md:pt-14">
         {/* Main content */}
         <div
           className="
             grid
-            gap-14
+            gap-10
             border-b
             border-black/10
-            pb-16
+            pb-12
 
             md:grid-cols-2
-            md:gap-16
-            md:pb-20
+            md:gap-12
+            md:pb-14
 
             lg:grid-cols-12
           "
@@ -63,12 +63,12 @@ export default async function Footer() {
 
             <h2
               className="
-                mt-5
+                mt-3
                 max-w-xl
                 font-serif
                 text-3xl
                 font-light
-                leading-[1.25]
+                leading-[1.1]
 
                 sm:text-4xl
                 md:text-[42px]
@@ -93,7 +93,7 @@ export default async function Footer() {
 
             <nav
               aria-label="Footer navigation"
-              className="mt-6 flex flex-col items-start gap-3"
+              className="mt-4 flex flex-col items-start gap-1.5"
             >
               {navigationLinks.map((link) => (
                 <Link
@@ -102,7 +102,7 @@ export default async function Footer() {
                   className="
                     border-b
                     border-transparent
-                    pb-1
+                    pb-0.5
                     text-sm
                     text-black/65
                     transition
@@ -131,7 +131,7 @@ export default async function Footer() {
               Contact & Social
             </p>
 
-            <div className="mt-6 flex flex-col items-start gap-3">
+            <div className="mt-4 flex flex-col items-start gap-1.5">
               {settings?.contact_email && (
                 <a
                   href={`mailto:${settings.contact_email}`}
@@ -139,7 +139,7 @@ export default async function Footer() {
                     break-all
                     border-b
                     border-transparent
-                    pb-1
+                    pb-0.5
                     text-sm
                     text-black/65
                     transition
@@ -161,7 +161,7 @@ export default async function Footer() {
                   className="
                     border-b
                     border-transparent
-                    pb-1
+                    pb-0.5
                     text-sm
                     text-black/65
                     transition
@@ -183,10 +183,10 @@ export default async function Footer() {
           className="
             flex
             flex-col
-            gap-5
+            gap-3
             border-t
             border-black/10
-            pt-7
+            pt-5
             text-[11px]
             text-black/45
 
@@ -200,7 +200,7 @@ export default async function Footer() {
             {settings?.copyright_text || "EAMORA. All rights reserved."}
           </p>
 
-          <div className="flex flex-wrap gap-x-5 gap-y-3">
+          <div className="flex flex-wrap gap-x-4 gap-y-1.5">
             {legalLinks.map((link) => (
               <Link
                 key={link.href}

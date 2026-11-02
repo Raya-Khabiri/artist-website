@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -81,13 +80,6 @@ export default function EditArtworkPage() {
           <p className="text-sm text-[#9b1c1c]">
             {error || "Artwork not found."}
           </p>
-
-          <Link
-            href="/studio/artworks"
-            className="mt-6 inline-block border-b border-black/20 pb-1 text-sm"
-          >
-            Return to artworks
-          </Link>
         </div>
       </main>
     );
@@ -109,21 +101,7 @@ export default function EditArtworkPage() {
     >
       <div className="mx-auto max-w-4xl">
         <header className="border-b border-black/10 pb-10">
-          <Link
-            href="/studio/artworks"
-            className="
-              text-[9px]
-              uppercase
-              tracking-[0.28em]
-              text-black/40
-              transition
-              hover:text-[#9b1c1c]
-            "
-          >
-            Back to artworks
-          </Link>
-
-          <p className="mt-10 text-[10px] uppercase tracking-[0.3em] text-[#9b1c1c]">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-[#9b1c1c]">
             Studio management
           </p>
 

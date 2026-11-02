@@ -69,7 +69,7 @@ export default function StudioPage() {
 
             <h1
               className="
-                mt-4
+                mt-3
                 font-serif
                 text-4xl
                 font-light
@@ -85,7 +85,7 @@ export default function StudioPage() {
                 mt-5
                 max-w-xl
                 text-sm
-                leading-6
+                leading-4
                 text-black/55
               "
             >
@@ -93,26 +93,6 @@ export default function StudioPage() {
               one place.
             </p>
           </div>
-
-          <Link
-            href="/"
-            className="
-              w-fit
-              border-b
-              border-black/25
-              pb-2
-              text-[10px]
-              uppercase
-              tracking-[0.25em]
-              text-black/55
-              transition
-
-              hover:border-[#9b1c1c]
-              hover:text-[#9b1c1c]
-            "
-          >
-            View website ↗
-          </Link>
         </header>
 
         <section
@@ -154,22 +134,23 @@ export default function StudioPage() {
                     {String(index + 1).padStart(2, "0")}
                   </span>
 
-                  <span
-                    className={`
-                      text-[9px]
-                      uppercase
-                      tracking-[0.2em]
-
-                      ${isAvailable ? "text-[#9b1c1c]" : "text-black/30"}
-                    `}
-                  >
-                    {isAvailable ? "Open" : "Coming soon"}
-                  </span>
+                  {!isAvailable && (
+                    <span
+                      className="
+                        text-[9px]
+                        uppercase
+                        tracking-[0.2em]
+                        text-black/30
+                      "
+                    >
+                      Coming soon
+                    </span>
+                  )}
                 </div>
 
                 <h2
                   className="
-                    mt-12
+                    mt-8
                     font-serif
                     text-3xl
                     font-light
@@ -180,10 +161,10 @@ export default function StudioPage() {
 
                 <p
                   className="
-                    mt-4
+                    mt-3
                     max-w-sm
                     text-sm
-                    leading-6
+                    leading-4
                     text-black/55
                   "
                 >
@@ -198,9 +179,9 @@ export default function StudioPage() {
                   key={item.title}
                   href={item.href}
                   className="
-                    min-h-64
+                    min-h-52
                     bg-[#f4f1eb]
-                    p-8
+                    p-6
                     transition
                     duration-300
 
@@ -216,9 +197,9 @@ export default function StudioPage() {
               <div
                 key={item.title}
                 className="
-                  min-h-64
+                  min-h-52
                   bg-[#f4f1eb]
-                  p-8
+                  p-6
                 "
               >
                 {content}

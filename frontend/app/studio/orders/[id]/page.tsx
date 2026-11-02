@@ -1,6 +1,4 @@
 "use client";
-
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState, type ChangeEvent } from "react";
 
@@ -142,13 +140,6 @@ export default function StudioOrderDetailPage() {
       <main className="min-h-screen bg-[#f4f1eb] px-6 py-20">
         <div className="mx-auto max-w-4xl">
           <p className="text-sm text-[#9b1c1c]">{error}</p>
-
-          <Link
-            href="/studio/orders"
-            className="mt-6 inline-block border-b border-black/20 pb-1 text-sm"
-          >
-            Return to orders
-          </Link>
         </div>
       </main>
     );
@@ -162,14 +153,7 @@ export default function StudioOrderDetailPage() {
     <main className="min-h-screen bg-[#f4f1eb] px-6 py-10 text-[#171717] sm:px-10 lg:px-16 lg:py-14">
       <div className="mx-auto max-w-5xl">
         <header className="border-b border-black/10 pb-10">
-          <Link
-            href="/studio/orders"
-            className="text-[9px] uppercase tracking-[0.28em] text-black/40 transition hover:text-[#9b1c1c]"
-          >
-            Back to orders
-          </Link>
-
-          <div className="mt-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+          <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
             <div>
               <p className="text-[10px] uppercase tracking-[0.3em] text-[#9b1c1c]">
                 Order

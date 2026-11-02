@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 
 import { useAuth } from "@/components/auth/AuthProvider";
+import PasswordInput from "@/components/auth/PasswordInput";
 
 type LoginFormProps = {
   redirectTo?: string;
@@ -66,21 +67,12 @@ export default function LoginForm({ redirectTo = "/" }: LoginFormProps) {
       </div>
 
       <div className="mt-8">
-        <label
-          htmlFor="password"
-          className="text-xs uppercase tracking-[0.25em] text-black/50"
-        >
-          Password
-        </label>
-
-        <input
+        <PasswordInput
           id="password"
-          type="password"
-          autoComplete="current-password"
-          required
+          label="Password"
           value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          className="mt-3 w-full border-b border-black/20 bg-transparent py-3 text-lg outline-none transition focus:border-[#9b1c1c]"
+          onChange={setPassword}
+          autoComplete="current-password"
         />
       </div>
 
