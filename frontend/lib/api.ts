@@ -1,8 +1,7 @@
 import type { Artwork, Category, Technique } from "@/types/artwork";
 import { unstable_noStore as noStore } from "next/cache";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 
 type PaginatedResponse<T> = {
   count: number;
@@ -48,9 +47,7 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
   noStore();
 
   try {
-    const response = await fetch(
-      `${API_URL}/api/site/`,
-    );
+    const response = await fetch(`${API_URL}/api/site/`);
 
     if (!response.ok) {
       return null;
@@ -58,18 +55,13 @@ export async function getSiteSettings(): Promise<SiteSettings | null> {
 
     return response.json();
   } catch (error) {
-    console.error(
-      "Failed to load site settings:",
-      error,
-    );
+    console.error("Failed to load site settings:", error);
 
     return null;
   }
 }
 
-export async function getArtworks(
-  query?: string,
-): Promise<Artwork[]> {
+export async function getArtworks(query?: string): Promise<Artwork[]> {
   const endpoint = query
     ? `${API_URL}/api/artworks/artworks/?${query}`
     : `${API_URL}/api/artworks/artworks/`;
@@ -84,8 +76,7 @@ export async function getArtworks(
     throw new Error("Failed to load artworks.");
   }
 
-  const data: Artwork[] | PaginatedResponse<Artwork> =
-    await response.json();
+  const data: Artwork[] | PaginatedResponse<Artwork> = await response.json();
 
   if (Array.isArray(data)) {
     return data;
@@ -94,16 +85,11 @@ export async function getArtworks(
   return data.results ?? [];
 }
 
-export async function getArtworkBySlug(
-  slug: string,
-): Promise<Artwork | null> {
+export async function getArtworkBySlug(slug: string): Promise<Artwork | null> {
   try {
-    const response = await fetch(
-      `${API_URL}/api/artworks/artworks/${slug}/`,
-      {
-        cache: "no-store",
-      },
-    );
+    const response = await fetch(`${API_URL}/api/artworks/artworks/${slug}/`, {
+      cache: "no-store",
+    });
 
     if (!response.ok) {
       return null;
@@ -117,21 +103,17 @@ export async function getArtworkBySlug(
 }
 
 export async function getCategories(): Promise<Category[]> {
-  const response = await fetch(
-    `${API_URL}/api/artworks/categories/`,
-    {
-      next: {
-        revalidate: 60,
-      },
+  const response = await fetch(`${API_URL}/api/artworks/categories/`, {
+    next: {
+      revalidate: 60,
     },
-  );
+  });
 
   if (!response.ok) {
     throw new Error("Failed to load categories.");
   }
 
-  const data: Category[] | PaginatedResponse<Category> =
-    await response.json();
+  const data: Category[] | PaginatedResponse<Category> = await response.json();
 
   if (Array.isArray(data)) {
     return data;
@@ -141,24 +123,17 @@ export async function getCategories(): Promise<Category[]> {
 }
 
 export async function getTechniques(): Promise<Technique[]> {
-  const response = await fetch(
-    `${API_URL}/api/artworks/techniques/`,
-    {
-      next: {
-        revalidate: 60,
-      },
+  const response = await fetch(`${API_URL}/api/artworks/techniques/`, {
+    next: {
+      revalidate: 60,
     },
-  );
+  });
 
   if (!response.ok) {
-    throw new Error(
-      "Failed to load techniques.",
-    );
+    throw new Error("Failed to load techniques.");
   }
 
-  const data:
-    | Technique[]
-    | PaginatedResponse<Technique> =
+  const data: Technique[] | PaginatedResponse<Technique> =
     await response.json();
 
   if (Array.isArray(data)) {
@@ -186,26 +161,14 @@ export async function getTechniques(): Promise<Technique[]> {
 //   return path.startsWith("/") ? path : `/${path}`;
 // }
 
-export function getMediaUrl(
-  path: string | null | undefined,
-): string | null {
+export function getMediaUrl(path: string | null | undefined): string | null {
   if (!path) {
     return null;
   }
 
   if (path.startsWith("http://") || path.startsWith("https://")) {
-    try {
-      const url = new URL(path);
-
-      if (url.pathname.startsWith("/media/")) {
-        return url.pathname;
-      }
-
-      return path;
-    } catch {
-      return path;
-    }
+    return path;
   }
 
-  return path.startsWith("/") ? path : `/${path}`;
+  return `${API_URL}${path.startsWith("/") ? path : `/${path}`}`;
 }

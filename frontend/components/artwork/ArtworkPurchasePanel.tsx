@@ -186,7 +186,42 @@ export default function ArtworkPurchasePanel({
 
       {wasAdded && (
         <div className="mt-5 flex items-center justify-between gap-4 text-sm">
-          <span className="text-green-800">Added to basket.</span>
+          <span
+            className="
+              inline-flex
+              items-center
+              gap-2
+              font-medium
+              text-emerald-700
+            "
+          >
+            <span
+              aria-hidden="true"
+              className="
+                inline-flex
+                h-5
+                w-5
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-emerald-700/30
+                bg-emerald-700/10
+              "
+            >
+              <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5">
+                <path
+                  d="M5 12.5 9.2 17 19 7"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+
+            <span>Added to basket.</span>
+          </span>
 
           <Link
             href="/cart"
