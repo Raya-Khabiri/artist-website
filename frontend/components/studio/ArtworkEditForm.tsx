@@ -652,15 +652,19 @@ export default function ArtworkEditForm({ artwork }: ArtworkEditFormProps) {
             text-black/45
           "
         >
-          Image description
+          Image alt text
         </label>
+        <p className="mt-2 text-xs leading-5 text-black/40">
+          Briefly describe what is visible in the image for accessibility and
+          search engines. Required before publishing.
+        </p>
 
         <input
           id="main_image_alt"
           name="main_image_alt"
           type="text"
           maxLength={200}
-          placeholder="Describe the artwork for accessibility"
+          placeholder="Example: Abstract painting in black, white and red"
           className="
             mt-3
             w-full
