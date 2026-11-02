@@ -133,6 +133,10 @@ class CheckoutCreateSerializer(
         allow_empty=False,
     )
 
+    customer_email = serializers.EmailField(
+        max_length=254,
+    )
+
     customer_phone = serializers.CharField(
         max_length=30,
         required=False,
@@ -317,7 +321,7 @@ class CheckoutCreateSerializer(
             order = Order.objects.create(
                 customer=user,
                 customer_name=customer_name,
-                customer_email=user.email,
+                customer_email=validated_data["customer_email"].strip().lower(),
                 customer_phone=validated_data.get(
                     "customer_phone",
                     "",

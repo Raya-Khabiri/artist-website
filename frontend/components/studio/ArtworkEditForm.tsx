@@ -145,45 +145,94 @@ export default function ArtworkEditForm({ artwork }: ArtworkEditFormProps) {
         />
       </div>
 
-      {/* Single description */}
-      <div className="mt-7">
-        <label
-          htmlFor="short_description"
-          className="
-            block
-            text-[10px]
-            uppercase
-            tracking-[0.25em]
-            text-black/45
-          "
-        >
-          Description
-        </label>
+      {/* Artwork descriptions */}
+      <div className="mt-7 grid gap-7">
+        <div>
+          <label
+            htmlFor="short_description"
+            className="
+        block
+        text-[10px]
+        uppercase
+        tracking-[0.25em]
+        text-black/45
+      "
+          >
+            Short gallery description (optional)
+          </label>
 
-        <textarea
-          id="short_description"
-          name="short_description"
-          rows={4}
-          maxLength={300}
-          defaultValue={artwork.short_description}
-          placeholder="Write a short description of the artwork"
-          className="
-            mt-3
-            w-full
-            resize-y
-            border
-            border-black/15
-            bg-transparent
-            px-4
-            py-3
-            text-base
-            leading-7
-            outline-none
-            transition
+          <p className="mt-2 text-xs leading-5 text-black/40">
+            A brief text shown beneath the artwork in the gallery.
+          </p>
 
-            focus:border-[#9b1c1c]
-          "
-        />
+          <textarea
+            id="short_description"
+            name="short_description"
+            rows={3}
+            maxLength={300}
+            defaultValue={artwork.short_description}
+            placeholder="A brief introduction to the artwork"
+            className="
+              mt-3
+              w-full
+              resize-y
+              border
+              border-black/15
+              bg-transparent
+              px-4
+              py-3
+              text-base
+              leading-7
+              outline-none
+              transition
+
+              focus:border-[#9b1c1c]
+            "
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="description"
+            className="
+              block
+              text-[10px]
+              uppercase
+              tracking-[0.25em]
+              text-black/45
+            "
+          >
+            Full artwork description (optional)
+          </label>
+
+          <p className="mt-2 text-xs leading-5 text-black/40">
+            The complete text shown on the individual artwork page.
+          </p>
+
+          <textarea
+            id="description"
+            name="description"
+            rows={7}
+            defaultValue={artwork.description}
+            placeholder="Write the full story, concept or context of the artwork"
+            className="
+              mt-3
+              w-full
+              resize-y
+              border
+              border-black/15
+              bg-transparent
+              px-4
+              py-3
+              text-base
+              leading-7
+              outline-none
+              transition
+
+              focus:border-[#9b1c1c]
+            "
+          />
+        </div>
       </div>
 
       {/* Technique and year */}

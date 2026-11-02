@@ -14,6 +14,10 @@ export default function ArtworkCreateForm() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const submitter = (event.nativeEvent as SubmitEvent)
+      .submitter as HTMLButtonElement | null;
+
+    const shouldPublish = submitter?.value === "publish";
 
     const form = event.currentTarget;
     const formData = new FormData(form);
@@ -24,7 +28,6 @@ export default function ArtworkCreateForm() {
       "original_available",
       "print_available",
       "is_featured",
-      "is_published",
     ] as const;
 
     booleanFields.forEach((fieldName) => {
@@ -35,15 +38,22 @@ export default function ArtworkCreateForm() {
       }
     });
 
+    formData.set("is_published", shouldPublish ? "true" : "false");
+
     formData.set("currency", "GBP");
 
     setIsSubmitting(true);
     setError(null);
 
     try {
-      await createStudioArtwork(formData);
+      const createdArtwork = await createStudioArtwork(formData);
 
-      router.push("/studio/artworks");
+      if (shouldPublish) {
+        router.push(`/gallery/${encodeURIComponent(createdArtwork.slug)}`);
+      } else {
+        router.push(`/studio/artworks/${createdArtwork.id}/edit`);
+      }
+
       router.refresh();
     } catch (submitError) {
       setError(
@@ -106,46 +116,93 @@ export default function ArtworkCreateForm() {
         />
       </div>
 
-      {/* Single description */}
-      <div className="mt-7">
-        <label
-          htmlFor="short_description"
-          className="
-            block
-            text-[10px]
-            uppercase
-            tracking-[0.25em]
-            text-black/45
-          "
-        >
-          Description
-        </label>
+      {/* Artwork descriptions */}
+      <div className="mt-7 grid gap-7">
+        <div>
+          <label
+            htmlFor="short_description"
+            className="
+        block
+        text-[10px]
+        uppercase
+        tracking-[0.25em]
+        text-black/45
+      "
+          >
+            Short gallery description (optional)
+          </label>
 
-        <textarea
-          id="short_description"
-          name="short_description"
-          rows={4}
-          maxLength={300}
-          placeholder="Write a short description of the artwork"
-          className="
-            mt-3
-            w-full
-            resize-y
-            border
-            border-black/15
-            bg-transparent
-            px-4
-            py-3
-            text-base
-            leading-7
-            outline-none
-            transition
+          <p className="mt-2 text-xs leading-5 text-black/40">
+            A brief text shown beneath the artwork in the gallery.
+          </p>
 
-            focus:border-[#9b1c1c]
-          "
-        />
+          <textarea
+            id="short_description"
+            name="short_description"
+            rows={3}
+            maxLength={300}
+            placeholder="A brief introduction to the artwork"
+            className="
+              mt-3
+              w-full
+              resize-y
+              border
+              border-black/15
+              bg-transparent
+              px-4
+              py-3
+              text-base
+              leading-7
+              outline-none
+              transition
+
+              focus:border-[#9b1c1c]
+            "
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="description"
+            className="
+                block
+                text-[10px]
+                uppercase
+                tracking-[0.25em]
+                text-black/45
+              "
+          >
+            Full artwork description (optional)
+          </label>
+
+          <p className="mt-2 text-xs leading-5 text-black/40">
+            The complete text shown on the individual artwork page.
+          </p>
+
+          <textarea
+            id="description"
+            name="description"
+            rows={7}
+            placeholder="Write the full story, concept or context of the artwork"
+            className="
+              mt-3
+              w-full
+              resize-y
+              border
+              border-black/15
+              bg-transparent
+              px-4
+              py-3
+              text-base
+              leading-7
+              outline-none
+              transition
+
+              focus:border-[#9b1c1c]
+            "
+          />
+        </div>
       </div>
-
       {/* Technique and year */}
       <div
         className="
@@ -668,24 +725,6 @@ export default function ArtworkCreateForm() {
           />
           Feature on homepage
         </label>
-
-        <label
-          className="
-            flex
-            cursor-pointer
-            items-center
-            gap-3
-            text-sm
-            text-black/65
-            "
-        >
-          <input
-            name="is_published"
-            type="checkbox"
-            className="accent-[#9b1c1c]"
-          />
-          Publish immediately
-        </label>
       </div>
 
       {error && (
@@ -716,30 +755,60 @@ export default function ArtworkCreateForm() {
           pt-7
         "
       >
-        <p className="text-xs text-black/40">
-          Leave “Publish immediately” unchecked to save a private draft.
+        <p className="max-w-sm text-xs leading-5 text-black/40">
+          Save privately to continue editing, or publish and view the artwork on
+          the website.
         </p>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="
-            bg-[#171717]
-            px-6
-            py-3
-            text-[10px]
-            uppercase
-            tracking-[0.23em]
-            text-white
-            transition
+        <div className="flex flex-wrap justify-end gap-3">
+          <button
+            type="submit"
+            name="intent"
+            value="draft"
+            disabled={isSubmitting}
+            className="
+              border
+              border-black/20
+              px-6
+              py-3
+              text-[10px]
+              uppercase
+              tracking-[0.23em]
+              text-black/65
+              transition
 
-            hover:bg-[#9b1c1c]
-            disabled:cursor-wait
-            disabled:opacity-50
-          "
-        >
-          {isSubmitting ? "Saving..." : "Save draft"}
-        </button>
+              hover:border-black
+              hover:text-black
+              disabled:cursor-wait
+              disabled:opacity-50
+            "
+          >
+            {isSubmitting ? "Saving..." : "Save draft"}
+          </button>
+
+          <button
+            type="submit"
+            name="intent"
+            value="publish"
+            disabled={isSubmitting}
+            className="
+              bg-[#171717]
+              px-6
+              py-3
+              text-[10px]
+              uppercase
+              tracking-[0.23em]
+              text-white
+              transition
+
+              hover:bg-[#9b1c1c]
+              disabled:cursor-wait
+              disabled:opacity-50
+            "
+          >
+            {isSubmitting ? "Publishing..." : "Publish & Preview"}
+          </button>
+        </div>
       </div>
     </form>
   );

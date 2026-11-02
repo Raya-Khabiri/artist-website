@@ -108,6 +108,8 @@ export default function CheckoutForm() {
           quantity: item.quantity,
         })),
 
+        customer_email: String(formData.get("customer_email") || "").trim(),
+
         customer_phone: String(formData.get("customer_phone") || ""),
 
         address_line_1: String(formData.get("address_line_1") || ""),
@@ -162,6 +164,18 @@ export default function CheckoutForm() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
+          <label className="block md:col-span-2">
+            <span className={labelClassName}>Email address</span>
+
+            <input
+              name="customer_email"
+              type="email"
+              required
+              autoComplete="email"
+              placeholder="you@example.com"
+              className={inputClassName}
+            />
+          </label>
           <label className="block md:col-span-2">
             <span className={labelClassName}>Address line 1</span>
 

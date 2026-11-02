@@ -357,17 +357,6 @@ export default function SiteContentForm({ settings }: SiteContentFormProps) {
           </label>
 
           <label className="block">
-            <span className={labelClassName}>Facebook URL</span>
-
-            <input
-              name="facebook_url"
-              type="url"
-              defaultValue={settings.facebook_url}
-              className={inputClassName}
-            />
-          </label>
-
-          <label className="block">
             <span className={labelClassName}>Copyright text</span>
 
             <input

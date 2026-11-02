@@ -198,15 +198,7 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
       <main className="min-h-screen bg-[#f4f1eb] text-[#171717]">
         <section className="pb-24 pt-32 md:pb-36 md:pt-40">
           <Container>
-            <Link
-              href="/gallery"
-              className="inline-flex items-center gap-3 text-xs uppercase tracking-[0.22em] text-black/55 transition-colors hover:text-black"
-            >
-              <span aria-hidden="true">←</span>
-              Back to gallery
-            </Link>
-
-            <div className="mt-10 grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
+            <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
               <div
                 className="
                   mx-auto
@@ -289,20 +281,21 @@ export default async function ArtworkPage({ params }: ArtworkPageProps) {
                   </div>
                 </dl>
 
-                {/* 5. Short description */}
-                {artwork.short_description && (
-                  <p
+                {/* Full artwork description */}
+                {artwork.description && (
+                  <div
                     className="
                       mt-8
                       whitespace-pre-line
                       text-justify
                       text-base
+                      font-light
                       leading-7
                       text-black/65
                     "
                   >
-                    {artwork.short_description}
-                  </p>
+                    {artwork.description}
+                  </div>
                 )}
 
                 <ArtworkPurchasePanel

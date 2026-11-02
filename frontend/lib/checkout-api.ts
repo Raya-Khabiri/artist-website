@@ -8,6 +8,7 @@ export type CheckoutData = {
     quantity: number;
   }>;
 
+  customer_email: string;
   customer_phone: string;
 
   address_line_1: string;

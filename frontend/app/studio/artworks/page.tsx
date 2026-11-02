@@ -33,24 +33,8 @@ export default function StudioArtworksPage() {
           "
         >
           <div>
-            <Link
-              href="/studio"
-              className="
-                text-[9px]
-                uppercase
-                tracking-[0.28em]
-                text-black/40
-                transition
-
-                hover:text-[#9b1c1c]
-              "
-            >
-              ← Artist dashboard
-            </Link>
-
             <p
               className="
-                mt-8
                 text-[10px]
                 uppercase
                 tracking-[0.35em]

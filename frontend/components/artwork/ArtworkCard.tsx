@@ -21,28 +21,50 @@ function formatPrice(value: string, currency: string) {
   }).format(amount);
 }
 
-export default function ArtworkCard({
-  artwork,
-}: ArtworkCardProps) {
+function formatMeasurement(value: string) {
+  const amount = Number(value);
+
+  if (!Number.isFinite(amount)) {
+    return value;
+  }
+
+  return new Intl.NumberFormat("en-GB", {
+    maximumFractionDigits: 2,
+  }).format(amount);
+}
+
+function getArtworkDimensions(artwork: Artwork) {
+  if (artwork.size.trim()) {
+    return artwork.size.trim();
+  }
+
+  if (artwork.width_mm && artwork.height_mm) {
+    return `${formatMeasurement(artwork.width_mm)} \u00D7 ${formatMeasurement(
+      artwork.height_mm,
+    )} mm`;
+  }
+
+  return null;
+}
+
+export default function ArtworkCard({ artwork }: ArtworkCardProps) {
   const imageUrl = getMediaUrl(artwork.main_image);
+  const dimensions = getArtworkDimensions(artwork);
 
   const visiblePrice = artwork.show_price
-    ? artwork.original_available &&
-      artwork.original_price
-    ? artwork.original_price
-    : artwork.print_available
-      ? artwork.print_price
-      : null
-  : null;
+    ? artwork.original_available && artwork.original_price
+      ? artwork.original_price
+      : artwork.print_available
+        ? artwork.print_price
+        : null
+    : null;
 
   const pricePrefix =
-    artwork.original_available &&
-    artwork.original_price
+    artwork.original_available && artwork.original_price
       ? ""
-      : artwork.print_available &&
-        artwork.print_price
-      ? "Prints from "
-      : "";
+      : artwork.print_available && artwork.print_price
+        ? "Prints from "
+        : "";
 
   const statusLabel = {
     available: null,
@@ -53,10 +75,7 @@ export default function ArtworkCard({
 
   return (
     <article className="group">
-      <Link
-        href={`/gallery/${artwork.slug}`}
-        className="block"
-      >
+      <Link href={`/gallery/${artwork.slug}`} className="block">
         <div
           className="
             relative
@@ -122,7 +141,10 @@ export default function ArtworkCard({
           <div className="min-w-0">
             <h3
               className="
-                truncate
+                flex
+                flex-wrap
+                items-baseline
+                gap-x-2
                 font-serif
                 text-xl
                 font-light
@@ -135,8 +157,37 @@ export default function ArtworkCard({
                 sm:text-[22px]
               "
             >
-              {artwork.title}
+              <span>{artwork.title}</span>
+
+              {dimensions && (
+                <span
+                  className="
+                    whitespace-nowrap
+                    font-sans
+                    text-[11px]
+                    font-normal
+                    text-black/45
+                  "
+                >
+                  ({dimensions})
+                </span>
+              )}
             </h3>
+            {artwork.short_description && (
+              <p
+                className="
+                  mt-2
+                  line-clamp-2
+                  max-w-md
+                  text-[11px]
+                  font-light
+                  leading-4
+                  text-black/45
+                "
+              >
+                {artwork.short_description}
+              </p>
+            )}
 
             {artwork.category?.name && (
               <p
@@ -157,16 +208,11 @@ export default function ArtworkCard({
             {visiblePrice && (
               <p className="text-sm font-light text-black/65">
                 {pricePrefix}
-                {formatPrice(
-                  visiblePrice,
-                  artwork.currency,
-                )}
+                {formatPrice(visiblePrice, artwork.currency)}
               </p>
             )}
             {statusLabel && (
-              <p
-                className="mt-2 text-[9px] uppercase tracking-[0.18em] text-[#9b1c1c]"
-              >
+              <p className="mt-2 text-[9px] uppercase tracking-[0.18em] text-[#9b1c1c]">
                 {statusLabel}
               </p>
             )}

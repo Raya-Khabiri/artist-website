@@ -12,6 +12,10 @@ import { getUnreadMessageCount } from "@/lib/conversation-api";
 
 const navItems = [
   {
+    label: "Home",
+    href: "/",
+  },
+  {
     label: "Gallery",
     href: "/gallery",
   },
@@ -115,32 +119,80 @@ export default function Navbar() {
           ${isScrolled ? "shadow-[0_8px_30px_rgba(0,0,0,0.08)]" : ""}
         `}
       >
-        <Link
-          href="/"
-          onClick={() => setIsMenuOpen(false)}
-          aria-label="EAMORA home"
-          className="
-            relative
-            block
-            h-[72px]
-            w-60
-            shrink-0
-            transition-opacity
-            duration-300
-            hover:opacity-65
+        <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+          <Link
+            href="/"
+            onClick={() => setIsMenuOpen(false)}
+            aria-label="EAMORA home"
+            className="
+              relative
+              block
+              h-[72px]
+              w-44
+              shrink-0
+              transition-opacity
+              duration-300
+              hover:opacity-65
 
-            sm:w-64
-          "
-        >
-          <Image
-            src="/images/logo/eamora-logo-v2.png"
-            alt="EAMORA"
-            fill
-            priority
-            sizes="256px"
-            className="object-contain object-left"
-          />
-        </Link>
+              sm:w-52
+              lg:w-60
+            "
+          >
+            <Image
+              src="/images/logo/eamora-logo-v2.png"
+              alt="EAMORA"
+              fill
+              priority
+              sizes="(max-width: 640px) 176px, (max-width: 1024px) 208px, 240px"
+              className="object-contain object-left"
+            />
+          </Link>
+
+          {!isLoading && user && (
+            <div
+              className="
+                min-w-0
+                border-l
+                border-black/15
+                pl-3
+
+                sm:pl-4
+              "
+              title={user.full_name}
+            >
+              <p
+                className="
+                  max-w-20
+                  truncate
+                  text-[11px]
+                  font-semibold
+                  tracking-[0.08em]
+                  text-[#171717]
+
+                  sm:max-w-28
+                  lg:max-w-36
+                "
+              >
+                {user.full_name}
+              </p>
+
+              {user.is_staff && (
+                <p
+                  className="
+                    mt-1
+                    text-[8px]
+                    font-medium
+                    uppercase
+                    tracking-[0.2em]
+                    text-[#9b1c1c]
+                  "
+                >
+                  Artist
+                </p>
+              )}
+            </div>
+          )}
+        </div>
 
         {/* Desktop navigation */}
         <nav

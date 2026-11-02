@@ -7,6 +7,8 @@ import { useState, type FormEvent } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { registerUser } from "@/lib/auth-api";
 
+import PasswordInput from "@/components/auth/PasswordInput";
+
 export default function RegisterForm() {
   const router = useRouter();
   const { login } = useAuth();
@@ -117,36 +119,24 @@ export default function RegisterForm() {
       </div>
 
       <div className="mt-8">
-        <label htmlFor="register-password" className={labelClassName}>
-          Password
-        </label>
-
-        <input
+        <PasswordInput
           id="register-password"
-          type="password"
-          autoComplete="new-password"
-          required
-          minLength={8}
+          label="Password"
           value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          className={inputClassName}
+          onChange={setPassword}
+          autoComplete="new-password"
+          minLength={8}
         />
       </div>
 
       <div className="mt-8">
-        <label htmlFor="password-confirm" className={labelClassName}>
-          Confirm password
-        </label>
-
-        <input
+        <PasswordInput
           id="password-confirm"
-          type="password"
-          autoComplete="new-password"
-          required
-          minLength={8}
+          label="Confirm password"
           value={passwordConfirm}
-          onChange={(event) => setPasswordConfirm(event.target.value)}
-          className={inputClassName}
+          onChange={setPasswordConfirm}
+          autoComplete="new-password"
+          minLength={8}
         />
       </div>
 
