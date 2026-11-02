@@ -166,9 +166,27 @@ export function getMediaUrl(path: string | null | undefined): string | null {
     return null;
   }
 
+  const isProduction = process.env.NODE_ENV === "production";
+
   if (path.startsWith("http://") || path.startsWith("https://")) {
-    return path;
+    try {
+      const url = new URL(path);
+
+      if (isProduction && url.pathname.startsWith("/media/")) {
+        return url.pathname;
+      }
+
+      return path;
+    } catch {
+      return path;
+    }
   }
 
-  return `${API_URL}${path.startsWith("/") ? path : `/${path}`}`;
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+  if (isProduction) {
+    return normalizedPath;
+  }
+
+  return `${API_URL}${normalizedPath}`;
 }

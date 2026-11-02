@@ -156,7 +156,7 @@ class UserSummarySerializer(serializers.ModelSerializer):
         )
 
     def get_full_name(self, obj):
-        return obj.get_full_name() or "User"
+        return obj.get_full_name() or obj.email or "User"
 
 
 class CustomerDetailsSerializer(serializers.ModelSerializer):
