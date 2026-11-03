@@ -740,6 +740,8 @@ export default function ArtworkCreateForm() {
             border-[#9b1c1c]
             pl-4
             text-sm
+            leading-6
+            whitespace-pre-line
             text-[#9b1c1c]
           "
         >
