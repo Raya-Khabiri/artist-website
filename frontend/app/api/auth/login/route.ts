@@ -52,8 +52,7 @@ export async function POST(request: Request) {
 
     response.cookies.set("access_token", data.access, {
       httpOnly: true,
-      // secure: isProduction,
-      secure: false,
+      secure: isProduction,
       sameSite: "lax",
       path: "/",
       maxAge: 15 * 60,
@@ -61,8 +60,7 @@ export async function POST(request: Request) {
 
     response.cookies.set("refresh_token", data.refresh, {
       httpOnly: true,
-      // secure: isProduction,
-      secure: false,
+      secure: isProduction,
       sameSite: "lax",
       path: "/",
       maxAge: 7 * 24 * 60 * 60,
