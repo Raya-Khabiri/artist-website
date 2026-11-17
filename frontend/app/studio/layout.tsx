@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
+import Navbar from "@/components/layout/Navbar";
 import StudioGuard from "@/components/studio/StudioGuard";
 
 export const metadata: Metadata = {
@@ -18,5 +19,11 @@ type StudioLayoutProps = {
 };
 
 export default function StudioLayout({ children }: StudioLayoutProps) {
-  return <StudioGuard>{children}</StudioGuard>;
+  return (
+    <StudioGuard>
+      <Navbar />
+
+      <div className="pt-20">{children}</div>
+    </StudioGuard>
+  );
 }

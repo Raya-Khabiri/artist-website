@@ -98,6 +98,11 @@ class AccountAuthenticationTests(APITestCase):
             self.user.email,
         )
 
+        self.assertEqual(
+            response.data["user"]["full_name"],
+            "Existing User",
+        )
+
     def test_invalid_password_is_rejected(self):
         response = self.client.post(
             reverse("accounts:login"),
